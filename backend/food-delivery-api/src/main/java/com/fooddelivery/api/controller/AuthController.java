@@ -37,7 +37,10 @@ public class AuthController {
             if (passwordEncoder.matches(
                     request.getPassword(),
                     user.get().getPassword())) {
-                String token = jwtService.generateToken(user.get().getEmail());
+                    String token = jwtService.generateToken(
+                        user.get().getEmail(),
+                        user.get().getRole()
+                    );
                 return new LoginResponse(
                         user.get().getId(),
                         user.get().getEmail(),
@@ -59,6 +62,7 @@ public class AuthController {
     public AuthResponse register(@RequestBody User user) {
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
+        user.setRole("USER");
         User savedUser = userRepository.save(user);
         return new AuthResponse(
                 savedUser.getId(),
