@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 import { Login } from './features/auth/login/login';
-import { Dashboard } from './features/dashboard/dashboard';
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
+import { UserDashboard } from './features/user/user-dashboard/user-dashboard';
+import { AdminDashboard } from './features/admin/admin-dashboard/admin-dashboard';
 
 export const routes: Routes = [
   {
@@ -11,12 +12,15 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: Dashboard,
-    canActivate: [authGuard]
+    component: UserDashboard,
+    canActivate: [authGuard,roleGuard],
+    data: {
+      role: 'USER'
+    }
   },
   {
     path: 'admin',
-    component: Dashboard,
+    component: AdminDashboard,
     canActivate: [authGuard, roleGuard],
     data: {
       role: 'ADMIN'

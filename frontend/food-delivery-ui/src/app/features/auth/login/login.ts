@@ -29,27 +29,33 @@ export class Login {
   });
 
   onSubmit(): void {
-  if (this.loginForm.invalid) {
-    return;
-  }
-
-  const { email, password } = this.loginForm.getRawValue();
-
-  console.log('Email:', JSON.stringify(email));
-  console.log('Password:', JSON.stringify(password));
-
-  this.authService.login({
-    email: email!,
-    password: password!
-  }).subscribe({
-    next: (response) => {
-      console.log('Login successful:', response);
-      this.tokenStorage.setToken(response.token);
-      this.router.navigate(['/dashboard']);
-    },
-    error: (error) => {
-      console.error('Login failed:', error);
+    if (this.loginForm.invalid) {
+      return;
     }
-  });
-}
+
+    const { email, password } = this.loginForm.getRawValue();
+
+    console.log('Email:', JSON.stringify(email));
+    console.log('Password:', JSON.stringify(password));
+
+    this.authService.login({
+      email: email!,
+      password: password!
+    }).subscribe({
+      next: (response) => {
+        console.log('Login successful:', response);
+        this.tokenStorage.setToken(response.token);
+        const role = this.tokenStorage.getRole();
+
+        if (role === 'ADMIN') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      },
+      error: (error) => {
+        console.error('Login failed:', error);
+      }
+    });
+  }
 }
