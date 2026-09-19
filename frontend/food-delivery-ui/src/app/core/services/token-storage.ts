@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { jwtDecode } from 'jwt-decode';
+import { JwtPayload } from '../../models/auth.models';
 
 @Injectable({
   providedIn: 'root',
@@ -21,5 +23,17 @@ export class TokenStorage {
 
   hasToken(): boolean {
     return !!this.getToken();
+  }
+
+  getRole(): string | null {
+    const token = this.getToken();
+
+    if (!token) {
+      return null;
+    }
+
+    const decodedToken = jwtDecode<JwtPayload>(token);
+
+    return decodedToken.role;
   }
 }
