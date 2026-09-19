@@ -1,0 +1,20 @@
+<h1>Restaurants</h1>
+
+@if (restaurants$ | async; as restaurants) {
+
+  @if (restaurants.length === 0) {
+    <p>No restaurants available.</p>
+  }
+
+  @for (restaurant of restaurants; track restaurant.id) {
+    <div class="restaurant-card">
+      <h2>{{ restaurant.name }}</h2>
+      <p>{{ restaurant.description }}</p>
+      <p>{{ restaurant.address }}</p>
+    </div>
+    <a [routerLink]="['/restaurants', restaurant.id]">
+      View Details
+    </a>
+  }
+
+}
