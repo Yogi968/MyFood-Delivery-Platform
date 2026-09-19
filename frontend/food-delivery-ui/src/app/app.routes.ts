@@ -4,6 +4,8 @@ import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 import { UserDashboard } from './features/user/user-dashboard/user-dashboard';
 import { AdminDashboard } from './features/admin/admin-dashboard/admin-dashboard';
+import { RestaurantList } from './features/restaurant/restaurant-list/restaurant-list';
+import { RestaurantDetails } from './features/restaurant/restaurant-details/restaurant-details';
 
 export const routes: Routes = [
   {
@@ -25,6 +27,16 @@ export const routes: Routes = [
     data: {
       role: 'ADMIN'
     }
+  },
+  {
+    path: 'restaurants',
+    component: RestaurantList,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'restaurants/:id',
+    component: RestaurantDetails,
+    canActivate: [authGuard]
   },
   {
     path: '',
