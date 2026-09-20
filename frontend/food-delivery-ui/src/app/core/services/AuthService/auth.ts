@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { TokenStorage } from '../TokenStorageService/token-storage';
+import { LoginRequest, LoginResponse } from '../../../models/auth.models';
 
-import {
-  LoginRequest,
-  LoginResponse
-} from '../../models/auth.models';
-import { TokenStorage } from './token-storage';
 
 @Injectable({
   providedIn: 'root',

@@ -1,20 +1,37 @@
 <h1>Restaurants</h1>
 
+@if (loading$ | async) {
+  <p>Loading restaurants...</p>
+}
+
+@if (error$ | async; as error) {
+  <p>{{ error }}</p>
+}
+
 @if (restaurants$ | async; as restaurants) {
 
-  @if (restaurants.length === 0) {
+  @if (restaurants.length === 0 && !(loading$ | async)) {
     <p>No restaurants available.</p>
   }
 
   @for (restaurant of restaurants; track restaurant.id) {
     <div class="restaurant-card">
-      <h2>{{ restaurant.name }}</h2>
-      <p>{{ restaurant.description }}</p>
-      <p>{{ restaurant.address }}</p>
-    </div>
-    <a [routerLink]="['/restaurants', restaurant.id]">
-      View Details
-    </a>
-  }
 
+      <h2>{{ restaurant.name }}</h2>
+
+      <p>{{ restaurant.description }}</p>
+
+      <p>{{ restaurant.address }}</p>
+
+      <p>
+        Status:
+        {{ restaurant.isActive ? 'Active' : 'Inactive' }}
+      </p>
+
+      <a [routerLink]="['/restaurants', restaurant.id]">
+        View Details
+      </a>
+
+    </div>
+  }
 }

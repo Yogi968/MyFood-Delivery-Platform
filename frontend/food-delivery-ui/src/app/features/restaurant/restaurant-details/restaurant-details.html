@@ -1,9 +1,15 @@
 <h1>Restaurant Details</h1>
 
+@if (loading$ | async) {
+  <p>Loading restaurant...</p>
+}
+
+@if (error$ | async; as error) {
+  <p>{{ error }}</p>
+}
+
 @if (restaurant$ | async; as restaurant) {
-
   <div class="restaurant-details">
-
     <h2>{{ restaurant.name }}</h2>
 
     <p>{{ restaurant.description }}</p>
@@ -16,9 +22,9 @@
       Status:
       {{ restaurant.isActive ? 'Active' : 'Inactive' }}
     </p>
-
   </div>
 }
+
 <a routerLink="/restaurants">
   Back to Restaurants
 </a>
