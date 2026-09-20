@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { TokenStorage } from '../services/token-storage';
+import { TokenStorage } from '../services/TokenStorageService/token-storage';
 
 export const roleGuard: CanActivateFn = (route, state) => {
 

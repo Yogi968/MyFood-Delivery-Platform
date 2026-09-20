@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Auth } from '../../../core/services/auth';
-import { TokenStorage } from '../../../core/services/token-storage';
+import { Auth } from '../../../core/services/AuthService/auth';
+import { TokenStorage } from '../../../core/services/TokenStorageService/token-storage';
 import { Router } from '@angular/router';
 
 
