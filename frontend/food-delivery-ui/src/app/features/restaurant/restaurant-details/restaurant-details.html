@@ -28,3 +28,64 @@
 <a routerLink="/restaurants">
   Back to Restaurants
 </a>
+
+<section class="menu-section">
+  <h2>Menu</h2>
+
+  @if (menuItemsLoading$ | async) {
+    <p>Loading menu...</p>
+  }
+
+  @if (menuItemsError$ | async; as error) {
+    <p class="error-message">{{ error }}</p>
+  }
+
+  @if (menuItems$ | async; as menuItems) {
+    @if (menuItems.length === 0) {
+      <p>No menu items available.</p>
+    } @else {
+      <div class="menu-grid">
+        @for (menuItem of menuItems; track menuItem.id) {
+          <article class="menu-item-card">
+
+            @if (menuItem.imageUrl) {
+              <img
+                [src]="menuItem.imageUrl"
+                [alt]="menuItem.name"
+              />
+            }
+
+            <div class="menu-item-content">
+              <h3>{{ menuItem.name }}</h3>
+
+              @if (menuItem.description) {
+                <p>{{ menuItem.description }}</p>
+              }
+
+              <p class="price">
+                ₹{{ menuItem.price }}
+              </p>
+
+              @if (menuItem.vegetarian) {
+                <span class="vegetarian">
+                  Vegetarian
+                </span>
+              } @else {
+                <span class="non-vegetarian">
+                  Non-Vegetarian
+                </span>
+              }
+
+              @if (!menuItem.available) {
+                <span class="unavailable">
+                  Currently unavailable
+                </span>
+              }
+            </div>
+
+          </article>
+        }
+      </div>
+    }
+  }
+</section>

@@ -1,13 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
-import { Observable } from 'rxjs';
-
-import { RestaurantService } from '../../../core/services/restaurant/restaurant';
-import { Restaurant } from '../../../models/restaurant.models';
 import { Store } from '@ngrx/store';
 import { selectRestaurantError, selectRestaurantLoading, selectSelectedRestaurant } from '../../../store/selectors/restaurant.selectors';
 import { loadRestaurantById } from '../../../store/actions/restaurant.actions';
+import { loadMenuItems } from '../../../store/actions/menu-item.actions';
+import { selectMenuItemError, selectMenuItemLoading, selectMenuItems } from '../../../store/selectors/menu-item.selectors';
 
 @Component({
   selector: 'app-restaurant-details',
@@ -23,6 +21,9 @@ export class RestaurantDetails implements OnInit {
   restaurant$ = this.store.select(selectSelectedRestaurant);
   loading$ = this.store.select(selectRestaurantLoading);
   error$ = this.store.select(selectRestaurantError);
+  menuItems$ = this.store.select(selectMenuItems);
+  menuItemsLoading$ = this.store.select(selectMenuItemLoading);
+  menuItemsError$ = this.store.select(selectMenuItemError);
 
   /**
    * Reads the restaurant ID from the route and dispatches
@@ -31,5 +32,6 @@ export class RestaurantDetails implements OnInit {
   ngOnInit(): void {
     const restaurantId = Number(this.route.snapshot.paramMap.get('id'));
     this.store.dispatch(loadRestaurantById({ id: restaurantId }));
+    this.store.dispatch(loadMenuItems({ restaurantId }));
   }
 }
