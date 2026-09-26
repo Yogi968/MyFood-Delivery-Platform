@@ -1,6 +1,8 @@
 <p>dashboard works!</p>
 <h1>Welcome to Food Delivery</h1>
-
+<a routerLink="/cart">
+  Cart ({{ cartTotalItems$ | async }})
+</a>
 <p>You are successfully authenticated.</p>
 <button type="button" (click)="logout()">
   Logout

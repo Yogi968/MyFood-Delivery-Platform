@@ -6,6 +6,8 @@ import { selectRestaurantError, selectRestaurantLoading, selectSelectedRestauran
 import { loadRestaurantById } from '../../../store/actions/restaurant.actions';
 import { loadMenuItems } from '../../../store/actions/menu-item.actions';
 import { selectMenuItemError, selectMenuItemLoading, selectMenuItems } from '../../../store/selectors/menu-item.selectors';
+import { MenuItem } from '../../../models/menu-item.models';
+import { addToCart } from '../../../store/actions/cart.actions';
 
 @Component({
   selector: 'app-restaurant-details',
@@ -34,4 +36,25 @@ export class RestaurantDetails implements OnInit {
     this.store.dispatch(loadRestaurantById({ id: restaurantId }));
     this.store.dispatch(loadMenuItems({ restaurantId }));
   }
+
+  /**
+ * Adds the selected menu item to the shopping cart.
+ *
+ * @param menuItem Menu item selected by the user
+ * @param restaurantId ID of the restaurant that owns the menu item
+ */
+addMenuItemToCart(
+  menuItem: MenuItem,
+  restaurantId: number
+): void {
+  this.store.dispatch(
+    addToCart({
+      item: {
+        menuItem,
+        quantity: 1,
+      },
+      restaurantId,
+    })
+  );
+}
 }
