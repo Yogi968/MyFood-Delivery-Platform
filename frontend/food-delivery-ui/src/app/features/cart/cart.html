@@ -1,0 +1,77 @@
+<h1>My Cart</h1>
+
+@if (cartItems$ | async; as cartItems) {
+
+  @if (cartItems.length === 0) {
+
+    <p>Your cart is empty.</p>
+
+  } @else {
+
+    @for (cartItem of cartItems; track cartItem.menuItem.id) {
+
+      <article class="cart-item">
+
+        <h2>{{ cartItem.menuItem.name }}</h2>
+
+        @if (cartItem.menuItem.description) {
+          <p>{{ cartItem.menuItem.description }}</p>
+        }
+
+        <p>Price: ₹{{ cartItem.menuItem.price }}</p>
+
+        <div>
+          <button
+            type="button"
+            (click)="decreaseQuantity(cartItem.menuItem.id)"
+          >
+            -
+          </button>
+
+          <span>{{ cartItem.quantity }}</span>
+
+          <button
+            type="button"
+            (click)="increaseQuantity(cartItem.menuItem.id)"
+          >
+            +
+          </button>
+        </div>
+
+        <p>
+          Item Total:
+          ₹{{ cartItem.menuItem.price * cartItem.quantity }}
+        </p>
+
+        <button
+          type="button"
+          (click)="removeItem(cartItem.menuItem.id)"
+        >
+          Remove
+        </button>
+
+      </article>
+
+    }
+
+    <hr>
+
+    <p>
+      Total Items:
+      {{ totalItems$ | async }}
+    </p>
+
+    <p>
+      Total Amount:
+      ₹{{ totalAmount$ | async }}
+    </p>
+
+    <button
+      type="button"
+      (click)="clearCart()"
+    >
+      Clear Cart
+    </button>
+  }
+
+}

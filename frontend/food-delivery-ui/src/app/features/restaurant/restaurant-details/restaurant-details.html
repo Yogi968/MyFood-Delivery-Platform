@@ -1,5 +1,7 @@
 <h1>Restaurant Details</h1>
-
+<a routerLink="/cart">
+  Go to Cart
+</a>
 @if (loading$ | async) {
   <p>Loading restaurant...</p>
 }
@@ -82,7 +84,9 @@
                 </span>
               }
             </div>
-
+            <button type="button" (click)="addMenuItemToCart(menuItem, menuItem.restaurantId)">
+              Add to Cart
+            </button>
           </article>
         }
       </div>

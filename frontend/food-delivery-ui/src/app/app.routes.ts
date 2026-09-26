@@ -6,6 +6,7 @@ import { UserDashboard } from './features/user/user-dashboard/user-dashboard';
 import { AdminDashboard } from './features/admin/admin-dashboard/admin-dashboard';
 import { RestaurantList } from './features/restaurant/restaurant-list/restaurant-list';
 import { RestaurantDetails } from './features/restaurant/restaurant-details/restaurant-details';
+import { Cart } from './features/cart/cart';
 
 export const routes: Routes = [
   {
@@ -42,5 +43,10 @@ export const routes: Routes = [
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
+  },
+  {
+    path: 'cart',
+    component: Cart,
+    canActivate: [authGuard],
   }
 ];
