@@ -1,0 +1,134 @@
+<h1>Checkout</h1>
+
+@if (cartItems$ | async; as cartItems) {
+
+@if (cartItems.length === 0) {
+
+<p>Your cart is empty.</p>
+
+} @else {
+
+<h2>Order Items</h2>
+
+@for (cartItem of cartItems; track cartItem.menuItem.id) {
+
+<article class="checkout-item">
+
+    <h3>{{ cartItem.menuItem.name }}</h3>
+
+    <p>
+        Quantity: {{ cartItem.quantity }}
+    </p>
+
+    <p>
+        Price: ₹{{ cartItem.menuItem.price }}
+    </p>
+
+    <p>
+        Item Total:
+        ₹{{ cartItem.menuItem.price * cartItem.quantity }}
+    </p>
+
+</article>
+
+}
+
+<hr>
+
+<p>
+    Total Items: {{ totalItems$ | async }}
+</p>
+
+<p>
+    Total Amount: ₹{{ totalAmount$ | async }}
+</p>
+
+<hr>
+
+<h2>Delivery Address</h2>
+
+<form [formGroup]="addressForm" (ngSubmit)="proceedToPayment()">
+
+    <div>
+        <label for="fullName">Full Name</label>
+        <input id="fullName" type="text" formControlName="fullName">
+
+        @if (
+        addressForm.controls.fullName.touched &&
+        addressForm.controls.fullName.invalid
+        ) {
+        <p>Full name is required.</p>
+        }
+    </div>
+
+    <div>
+        <label for="phoneNumber">Phone Number</label>
+        <input id="phoneNumber" type="tel" formControlName="phoneNumber">
+
+        @if (
+        addressForm.controls.phoneNumber.touched &&
+        addressForm.controls.phoneNumber.invalid
+        ) {
+        <p>Enter a valid 10-digit phone number.</p>
+        }
+    </div>
+
+    <div>
+        <label for="address">Address</label>
+        <textarea id="address" formControlName="address"></textarea>
+
+        @if (
+        addressForm.controls.address.touched &&
+        addressForm.controls.address.invalid
+        ) {
+        <p>Address is required.</p>
+        }
+    </div>
+
+    <div>
+        <label for="city">City</label>
+        <input id="city" type="text" formControlName="city">
+
+        @if (
+        addressForm.controls.city.touched &&
+        addressForm.controls.city.invalid
+        ) {
+        <p>City is required.</p>
+        }
+    </div>
+
+    <div>
+        <label for="pincode">Pincode</label>
+        <input id="pincode" type="text" formControlName="pincode">
+
+        @if (
+        addressForm.controls.pincode.touched &&
+        addressForm.controls.pincode.invalid
+        ) {
+        <p>Enter a valid 6-digit pincode.</p>
+        }
+    </div>
+    <hr>
+
+    <h2>Payment Method</h2>
+
+    <div>
+        <label>
+            <input type="radio" formControlName="paymentMethod" value="COD">
+            Cash on Delivery
+        </label>
+    </div>
+
+    <div>
+        <label>
+            <input type="radio" formControlName="paymentMethod" value="ONLINE">
+            Online Payment
+        </label>
+    </div>
+    <button type="submit">
+        Proceed to Payment
+    </button>
+</form>
+
+}
+}

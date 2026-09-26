@@ -1,0 +1,20 @@
+<h1>Order Confirmed!</h1>
+
+<section>
+  <h2>Payment Successful</h2>
+
+  <p>Your online payment was completed successfully.</p>
+
+  <p>
+    Order Amount:
+    ₹{{ totalAmount$ | async }}
+  </p>
+</section>
+
+<hr>
+
+<p>Thank you for ordering with MyFood.</p>
+
+<a routerLink="/restaurants">
+  Continue Shopping
+</a>
