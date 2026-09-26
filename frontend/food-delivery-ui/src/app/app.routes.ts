@@ -7,6 +7,9 @@ import { AdminDashboard } from './features/admin/admin-dashboard/admin-dashboard
 import { RestaurantList } from './features/restaurant/restaurant-list/restaurant-list';
 import { RestaurantDetails } from './features/restaurant/restaurant-details/restaurant-details';
 import { Cart } from './features/cart/cart';
+import { Checkout } from './features/checkout/checkout';
+import { Payment } from './features/payment/payment';
+import { OrderConfirmation } from './features/order-confirmation/order-confirmation';
 
 export const routes: Routes = [
   {
@@ -16,7 +19,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: UserDashboard,
-    canActivate: [authGuard,roleGuard],
+    canActivate: [authGuard, roleGuard],
     data: {
       role: 'USER'
     }
@@ -48,5 +51,20 @@ export const routes: Routes = [
     path: 'cart',
     component: Cart,
     canActivate: [authGuard],
-  }
+  },
+  {
+    path: 'checkout',
+    component: Checkout,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'payment',
+    component: Payment,
+    canActivate: [authGuard],
+  },
+  {
+  path: 'order-confirmation',
+  component: OrderConfirmation,
+  canActivate: [authGuard],
+}
 ];

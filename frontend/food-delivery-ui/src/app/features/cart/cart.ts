@@ -14,10 +14,11 @@ import {
   selectCartTotalItems,
   selectCartTotalAmount,
 } from '../../store/selectors/cart.selectors';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe,RouterLink],
   templateUrl: './cart.html',
   styleUrl: './cart.scss',
 })
