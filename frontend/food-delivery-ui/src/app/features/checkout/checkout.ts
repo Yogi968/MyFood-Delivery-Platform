@@ -6,8 +6,12 @@ import {
   selectCartItems,
   selectCartTotalItems,
   selectCartTotalAmount,
+  selectCartRestaurantId,
 } from '../../store/selectors/cart.selectors';
 import { Router } from '@angular/router';
+import { OrderService } from '../../core/services/orders/order.service';
+import { combineLatest } from 'rxjs';
+import { OrderRequest } from '../../models/order.models';
 
 @Component({
   selector: 'app-checkout',
@@ -19,9 +23,11 @@ export class Checkout {
   private readonly store = inject(Store);
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly orderService = inject(OrderService);
   cartItems$ = this.store.select(selectCartItems);
   totalItems$ = this.store.select(selectCartTotalItems);
   totalAmount$ = this.store.select(selectCartTotalAmount);
+  restaurantId$ = this.store.select(selectCartRestaurantId);
 
   addressForm = this.formBuilder.group({
     fullName: ['', Validators.required],
@@ -39,20 +45,61 @@ export class Checkout {
   });
 
   /**
-   * Validates the delivery address before proceeding to payment.
-   */
-  proceedToPayment(): void {
-    if (this.addressForm.invalid) {
-      this.addressForm.markAllAsTouched();
-      return;
-    }
-    
-    const paymentMethod = this.addressForm.value.paymentMethod;
-
-  if (paymentMethod === 'ONLINE') {
-    this.router.navigate(['/payment']);
+ * Validates the checkout form, creates an order through the backend,
+ * and navigates to the appropriate payment step.
+ */
+proceedToPayment(): void {
+  if (this.addressForm.invalid) {
+    this.addressForm.markAllAsTouched();
     return;
   }
-    console.log('Delivery address:', this.addressForm.value);
-  }
+
+  combineLatest([
+    this.cartItems$,
+    this.restaurantId$,
+  ]).subscribe(([cartItems, restaurantId]) => {
+    if (!restaurantId || cartItems.length === 0) {
+      console.error('Cart is empty or restaurant is missing.');
+      return;
+    }
+
+    const orderRequest: OrderRequest = {
+      restaurantId,
+      fullName: this.addressForm.value.fullName ?? '',
+      phoneNumber: this.addressForm.value.phoneNumber ?? '',
+      address: this.addressForm.value.address ?? '',
+      city: this.addressForm.value.city ?? '',
+      pincode: this.addressForm.value.pincode ?? '',
+      paymentMethod:
+        this.addressForm.value.paymentMethod === 'ONLINE'
+          ? 'ONLINE'
+          : 'COD',
+      items: cartItems.map((cartItem) => ({
+        menuItemId: cartItem.menuItem.id,
+        quantity: cartItem.quantity,
+      })),
+    };
+
+    this.orderService.createOrder(orderRequest).subscribe({
+      next: (order) => {
+        console.log('Order created successfully:', order);
+
+        if (order.paymentMethod === 'ONLINE') {
+          this.router.navigate(['/payment'], {
+            queryParams: {
+              orderId: order.id,
+            },
+          });
+
+          return;
+        }
+
+        console.log('COD order created:', order);
+      },
+      error: (error) => {
+        console.error('Failed to create order:', error);
+      },
+    });
+  });
+}
 }
