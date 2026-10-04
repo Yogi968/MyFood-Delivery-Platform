@@ -41,7 +41,10 @@ public class SecurityConfig {
                                 "/login",
                                 "/register",
                                 "/api/health",
-                                "/error"
+                                "/error",
+                                "/api/payments/payu/v2/success",
+                                "/api/payments/payu/v2/failure",
+                                "/api/payments/payu/v2/cancel"
                         ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/restaurants").hasRole("ADMIN")
@@ -63,6 +66,18 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Configures CORS rules for the application's API endpoints.
+     *
+     * <p>
+     * PayU callback endpoints are excluded from CORS processing because
+     * PayU submits the payment result directly to the backend using a
+     * form POST. These endpoints are already publicly accessible through
+     * Spring Security.
+     * </p>
+     *
+     * @return CORS configuration source
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
@@ -88,6 +103,28 @@ public class SecurityConfig {
                 configuration
         );
 
-        return source;
+        /*
+         * Do not register a CORS configuration for the PayU v2 callback
+         * endpoints because PayU submits the payment result directly
+         * to the backend.
+         */
+
+        return new CorsConfigurationSource() {
+
+            @Override
+            public CorsConfiguration getCorsConfiguration(
+                    jakarta.servlet.http.HttpServletRequest request) {
+
+                String requestUri = request.getRequestURI();
+
+                if (requestUri.equals("/api/payments/payu/v2/success")
+                        || requestUri.equals("/api/payments/payu/v2/failure")
+                        || requestUri.equals("/api/payments/payu/v2/cancel")) {
+                    return null;
+                }
+
+                return configuration;
+            }
+        };
     }
 }
