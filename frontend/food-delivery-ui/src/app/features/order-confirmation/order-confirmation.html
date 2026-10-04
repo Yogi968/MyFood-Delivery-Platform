@@ -1,20 +1,106 @@
-<h1>Order Confirmed!</h1>
+@if (order$ | async; as order) {
 
-<section>
-  <h2>Payment Successful</h2>
+  @if (paymentResult === 'success') {
 
-  <p>Your online payment was completed successfully.</p>
+    <h1>Order Confirmed!</h1>
+
+    <h2>Payment Successful</h2>
+
+    <p>
+      Your online payment was completed successfully.
+    </p>
+
+  } @else if (paymentResult === 'failed') {
+
+    <h1>Payment Failed</h1>
+
+    <h2>Payment Unsuccessful</h2>
+
+    <p>
+      Your payment could not be completed.
+      Your order has not been confirmed.
+    </p>
+
+  } @else if (paymentResult === 'cancelled') {
+
+    <h1>Payment Cancelled</h1>
+
+    <h2>Payment Was Cancelled</h2>
+
+    <p>
+      You cancelled the payment.
+      Your order has not been confirmed.
+    </p>
+
+  } @else {
+
+    <h1>Order Details</h1>
+
+  }
+
+  <hr>
+
+  <h3>Order Details</h3>
 
   <p>
-    Order Amount:
-    ₹{{ totalAmount$ | async }}
+    <strong>Order ID:</strong>
+    #{{ order.id }}
   </p>
-</section>
 
-<hr>
+  <p>
+    <strong>Order Amount:</strong>
+    ₹{{ order.totalAmount }}
+  </p>
 
-<p>Thank you for ordering with MyFood.</p>
+  <p>
+    <strong>Order Status:</strong>
+    {{ order.status }}
+  </p>
 
-<a routerLink="/restaurants">
-  Continue Shopping
-</a>
+  <p>
+    <strong>Payment Method:</strong>
+    {{ order.paymentMethod }}
+  </p>
+
+  <p>
+    <strong>Payment Status:</strong>
+    {{ order.paymentStatus }}
+  </p>
+
+  <p>
+    <strong>Delivery Name:</strong>
+    {{ order.fullName }}
+  </p>
+
+  <p>
+    <strong>Delivery Address:</strong>
+    {{ order.address }},
+    {{ order.city }} -
+    {{ order.pincode }}
+  </p>
+
+  <hr>
+
+  @if (paymentResult === 'success') {
+
+    <p>
+      Thank you for ordering with MyFood.
+    </p>
+
+  } @else {
+
+    <p>
+      You can try the payment again from your cart.
+    </p>
+
+  }
+
+  <a routerLink="/restaurants">
+    Continue Shopping
+  </a>
+
+} @else {
+
+  <p>Loading order details...</p>
+
+}
