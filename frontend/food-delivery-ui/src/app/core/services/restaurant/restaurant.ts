@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { delay, Observable, of, throwError } from 'rxjs';
 
-import { Restaurant, RestaurantRequest, RestaurantUpdateRequest } from '../../../models/restaurant.models';
+import { DisplayRestaurants, Restaurant, RestaurantRequest, RestaurantUpdateRequest } from '../../../models/restaurant.models';
 import { BaseApiService } from '../http/base-apiservice';
+import { mockRestaurantsData } from '../../../mock/restaurants.mock';
 
 @Injectable({
   providedIn: 'root'
@@ -15,16 +16,33 @@ export class RestaurantService {
   private readonly apiUrl =
     'http://localhost:8080/api/restaurants';
 
-  getRestaurants(): Observable<Restaurant[]> {
-    return this.baseApi.get<Restaurant[]>(
-      this.apiUrl
-    );
-  }
+  // getRestaurants(): Observable<Restaurant[]> {
+  //   return this.baseApi.get<Restaurant[]>(
+  //     this.apiUrl
+  //   );
+  // }
+  getRestaurants(): Observable<DisplayRestaurants[]> {
+  return of(mockRestaurantsData).pipe(delay(500));
+}
+
+  // getRestaurantById(id: number): Observable<Restaurant> {
+  //   return this.baseApi.get<Restaurant>(
+  //     `${this.apiUrl}/${id}`
+  //   );
+  // }
 
   getRestaurantById(id: number): Observable<Restaurant> {
-    return this.baseApi.get<Restaurant>(
-      `${this.apiUrl}/${id}`
+    const restaurant = mockRestaurantsData.find(
+      (item) => item.id === id
     );
+
+    if (!restaurant) {
+      return throwError(
+        () => new Error(`Restaurant with ID ${id} not found`)
+      );
+    }
+
+    return of(restaurant as unknown as Restaurant).pipe(delay(500));
   }
 
   createRestaurant(

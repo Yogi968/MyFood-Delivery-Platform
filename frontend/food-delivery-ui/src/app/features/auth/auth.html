@@ -1,0 +1,48 @@
+<div class="login-page">
+    <div class="login-page-hero-image-secton">
+        <div class="hero-content">
+            <div class="hero-content-heading-section">
+                <img src="https://res.cloudinary.com/gzafbake/image/upload/v1791100808/Brand_emblem.png"
+                    class="website-logo" />
+                <h1 class="website-name">MyFood</h1>
+            </div>
+            <div class="hero-content-section">
+                <p>Good food.</p>
+                <p>Great moments.</p>
+            </div>
+        </div>
+    </div>
+    <div class="login-page-authentication-section">
+        <div class="authentication-section-titles">
+            <h1 class="authentication-section-heading">Welcome Back</h1>
+            <p class="authentication-section-subheading">Sign in to continue to MyFood</p>
+        </div>
+
+        <mat-tab-group
+            class="auth-tab-group"
+            animationDuration="200ms"
+            mat-stretch-tabs="true"
+            [(selectedIndex)]="selectedTabIndex"
+        >
+            <!-- Login tab -->
+            <mat-tab label="Login">
+                <div class="auth-tab-content">
+                    <app-login (isRegisterButtonClicked)="isRegisterButtonClicked($event)"/>
+                </div>
+            </mat-tab>
+
+            <!-- Registration tab -->
+            <mat-tab label="Register">
+                <div class="auth-tab-content">
+                    <app-register-account (isLogInClicked)="isLoginButtonClicked($event)"/>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+        <!---------------------------------Terms & Service-------------------------->
+        <div class="legal-links">
+            <a href="#">Terms of service</a>
+            <a href="#">Privacy policy</a>
+        </div>
+    </div>
+</div>
