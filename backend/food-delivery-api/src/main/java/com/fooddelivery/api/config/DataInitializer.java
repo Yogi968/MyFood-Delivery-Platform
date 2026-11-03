@@ -32,6 +32,10 @@ public class DataInitializer {
                         "ADMIN"
                 );
 
+                // Set the required name fields before saving the admin.
+                admin.setFirstName("System");
+                admin.setLastName("Admin");
+
                 userRepository.save(admin);
 
                 System.out.println("Development admin created successfully.");
