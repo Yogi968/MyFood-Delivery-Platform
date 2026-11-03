@@ -16,3 +16,17 @@ export interface JwtPayload {
   iat: number;
   exp: number;
 }
+
+export interface createAccountRequest {
+  firstName:string;
+  lastName:string;
+  email:string;
+  password:string;
+  confirmPassword:string;
+}
+
+export interface createAccountResponse {
+  id: number;
+  email: string;
+  message: string;
+}

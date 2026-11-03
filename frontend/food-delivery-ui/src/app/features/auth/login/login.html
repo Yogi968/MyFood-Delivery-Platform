@@ -1,43 +1,93 @@
-<div class="login-page">
-    <div class="login-card">
-
-        <h1>Welcome Back</h1>
-        <p class="subtitle">Login to your Food Delivery account</p>
-
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input id="email" type="email" placeholder="Enter your email" formControlName="email" />
-                @if (loginForm.controls.email.touched && loginForm.controls.email.hasError('required')) {
-                <small class="error">Email is required.</small>
-                }
-
-                @if (loginForm.controls.email.touched && loginForm.controls.email.hasError('email')) {
-                <small class="error">Please enter a valid email address.</small>
-                }
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input id="password" type="password" placeholder="Enter your password" formControlName="password" />
-                @if (loginForm.controls.password.touched && loginForm.controls.password.hasError('required')) {
-                <small class="error">Password is required.</small>
-                }
-
-                @if (loginForm.controls.password.touched && loginForm.controls.password.hasError('minlength')) {
-                <small class="error">Password must be at least 6 characters.</small>
-                }
-            </div>
-
-            <button type="submit" [disabled]="loginForm.invalid">
-                Login
-            </button>
-        </form>
-
-        <p class="register-text">
-            Don't have an account?
-            <a href="#">Register</a>
-        </p>
-
+<div class="login-form-content" [class.loading]="isLoading">
+    <div class="login-error" [class.login-error-visible]="isLoginFailed" aria-live="polite">
+        <mat-icon class="login-error-icon">
+            error_outline
+        </mat-icon>
+    
+        <div class="login-error-content">
+            <p>Email or password is incorrect.</p>
+            <p>Please check your details and try again.</p>
+        </div>
     </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="email">Email*</label>
+            <input id="email" type="email" placeholder="you@gmail.com" formControlName="email" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password*</label>
+            <div class="password-input-wrapper">
+                <input id="password" [type]="showPassword ? 'text' : 'password'" placeholder="Enter your password"
+                    formControlName="password" />
+                <button type="button" class="password-visibility-button" (click)="togglePasswordVisibility()"
+                    [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                    <svg class="password-eye-icon" [attr.viewBox]="showPassword
+                                ? icons.EYE_OFF.viewBox
+                                : icons.EYE.viewBox" fill="none" stroke="#77736D" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+
+                        @if (!showPassword) {
+                        <path [attr.d]="icons.EYE.path"></path>
+
+                        <circle [attr.cx]="icons.EYE.circle.cx" [attr.cy]="icons.EYE.circle.cy"
+                            [attr.r]="icons.EYE.circle.r">
+                        </circle>
+                        }
+
+                        @else {
+
+                        @for (path of icons.EYE_OFF.paths; track path) {
+                        <path [attr.d]="path"></path>
+                        }
+
+                        <line [attr.x1]="icons.EYE_OFF.line.x1" [attr.y1]="icons.EYE_OFF.line.y1"
+                            [attr.x2]="icons.EYE_OFF.line.x2" [attr.y2]="icons.EYE_OFF.line.y2">
+                        </line>
+
+                        }
+
+                    </svg>
+                </button>
+                <!-- </button> -->
+            </div>
+        </div>
+
+        <div class="login-options">
+            <label class="remember-me">
+                <input type="checkbox" />
+                <span>Remember me</span>
+            </label>
+
+            <a href="#" class="forgot-password">
+                Forgot password?
+            </a>
+        </div>
+
+        <button class="authentication-button-section" type="submit" [disabled]="isButtonDisabled()">
+            @if (isLoading) {
+            <span class="login-spinner" aria-hidden="true"></span>
+            <span>Signing in...</span>
+            } @else {
+            <span>Sign In</span>
+            }
+        </button>
+    </form>
+    <div>
+        <p class="createaccount-text">
+            Don't have an account?
+            <span><a href="#" class="createaccount-subtext" (click)="$event.preventDefault(); registerButtonClicked()">Create account</a></span>
+        </p>
+    </div>
+
+    <!----------------------or divider------------------------------------------>
+    <div class="divider">
+        <span></span>
+        <p>OR</p>
+        <span></span>
+    </div>
+    <!-------------------------Google login------------------------------------->
+    <button type="button" class="google-login-button">
+        <img src="https://res.cloudinary.com/gzafbake/image/upload/v1791109450/Provider_identity.png" alt="Google" />
+        <span>Continue with Google</span>
+    </button>
 </div>

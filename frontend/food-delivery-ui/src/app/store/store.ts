@@ -4,17 +4,21 @@ import { MenuItemEffects } from './effects/menu-item.effects';
 import { menuItemReducer } from './reducers/menu-item.reducer';
 import { cartReducer } from './reducers/cart.reducer';
 import { CartEffects } from './effects/cart.effects';
+import { AuthEffects } from './effects/auth.effects';
+import { authReducer } from './reducers/auth.reducer';
 
 export const applicationReducers = {
   restaurant: restaurantReducer,
   menuItem: menuItemReducer,
   cart: cartReducer,
+  auth: authReducer
 };
 
 export const applicationEffects = [
   RestaurantEffects,
   MenuItemEffects,
   CartEffects,
+  AuthEffects
 ];
 
 export const storeProviders ={

@@ -10,11 +10,12 @@ import { Cart } from './features/cart/cart';
 import { Checkout } from './features/checkout/checkout';
 import { Payment } from './features/payment/payment';
 import { OrderConfirmation } from './features/order-confirmation/order-confirmation';
+import { Auth } from './features/auth/auth';
 
 export const routes: Routes = [
   {
     path: 'login',
-    component: Login
+    component: Auth
   },
   {
     path: 'dashboard',
@@ -42,6 +43,10 @@ export const routes: Routes = [
     component: RestaurantDetails,
     canActivate: [authGuard]
   },
+  {
+  path: '**',
+  redirectTo: 'login'
+},
   {
     path: '',
     redirectTo: 'login',
