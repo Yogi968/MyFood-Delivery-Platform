@@ -15,6 +15,7 @@ import com.fooddelivery.api.entity.PaymentStatus;
 import com.fooddelivery.api.payment.gateway.PayUV2Gateway;
 import com.fooddelivery.api.repository.OrderRepository;
 import com.fooddelivery.api.repository.PaymentRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final PayUConfig payUConfig;
     private final PayUV2Gateway payUV2Gateway;
+    private final String backendUrl;
 
     /**
      * Creates the payment service with the required dependencies.
@@ -48,12 +50,14 @@ public class PaymentService {
             OrderRepository orderRepository,
             PaymentRepository paymentRepository,
             PayUConfig payUConfig,
-            PayUV2Gateway payUV2Gateway) {
+            PayUV2Gateway payUV2Gateway,
+            @Value("${app.backend-url}") String backendUrl) {
 
         this.orderRepository = orderRepository;
         this.paymentRepository = paymentRepository;
         this.payUConfig = payUConfig;
         this.payUV2Gateway = payUV2Gateway;
+        this.backendUrl = backendUrl.replaceAll("/+$", "");
     }
 
     /**
@@ -159,13 +163,13 @@ public class PaymentService {
                 new PayUV2CallbackActions();
 
         callbackActions.setSuccessAction(
-                "http://localhost:8080/api/payments/payu/v2/success");
+                backendUrl + "/api/payments/payu/v2/success");
 
         callbackActions.setFailureAction(
-                "http://localhost:8080/api/payments/payu/v2/failure");
+                backendUrl + "/api/payments/payu/v2/failure");
 
         callbackActions.setCancelAction(
-                "http://localhost:8080/api/payments/payu/v2/cancel");
+                backendUrl + "/api/payments/payu/v2/cancel");
 
         PayUV2AdditionalInfo additionalInfo =
                 new PayUV2AdditionalInfo();

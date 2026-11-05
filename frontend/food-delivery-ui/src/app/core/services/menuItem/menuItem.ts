@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseApiService } from '../http/base-apiservice';
 import { MenuItem } from '../../../models/menu-item.models';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class MenuItemService {
 
   private readonly baseApiService = inject(BaseApiService);
   private readonly apiUrl =
-    'http://localhost:8080/api/restaurants';
+    `${environment.apiUrl}/api/restaurants`;
   /**
    * Retrieves all available menu items for a restaurant.
    *

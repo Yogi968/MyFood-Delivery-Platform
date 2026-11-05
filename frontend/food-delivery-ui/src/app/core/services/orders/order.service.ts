@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseApiService } from '../http/base-apiservice';
 import { OrderRequest, OrderResponse } from '../../../models/order.models';
+import { environment } from '../../../../environments/environment';
 
 
 @Injectable({
@@ -9,7 +10,7 @@ import { OrderRequest, OrderResponse } from '../../../models/order.models';
 })
 export class OrderService {
   private readonly baseApiService = inject(BaseApiService);
-  private readonly apiUrl = 'http://localhost:8080/api';
+  private readonly apiUrl = `${environment.apiUrl}/api`;
 
   /**
    * Creates a new order for the authenticated user.
