@@ -1,13 +1,252 @@
-<h1>User Dashboard</h1>
-<a routerLink="/cart">
-  Cart ({{ cartTotalItems$ | async }})
-</a>
-<p>Welcome to the MyFood customer dashboard.</p>
 
-<p>You are logged in as a USER.</p>
-<button type="button" (click)="logout()">
-  Logout
-</button>
-<a routerLink="/restaurants">
-  Browse Restaurants
-</a>
+<main class="dashboard-content">
+
+  <!-- Welcome section -->
+  <section class="welcome-section">
+
+    <div class="welcome-copy">
+      <h1>Good afternoon, what are you craving?</h1>
+      <p>Your neighbourhood favourites and new discoveries, delivered to your door.</p>
+    </div>
+
+    <div class="welcome-tagline">
+      <mat-icon>delivery_dining</mat-icon>
+      <span>Fresh food. Fast delivery.</span>
+    </div>
+
+  </section>
+
+  <!-- Promotional banner -->
+  <section class="promotion-banner">
+
+    <div class="promotion-content">
+
+      <span class="eyebrow">A LITTLE TREAT, ON US</span>
+
+      <h2>Big cravings.<br />Bigger savings.</h2>
+
+      <p>Get 50% off your first order</p>
+
+      <div class="promotion-actions">
+
+        <button
+          class="order-button"
+          type="button"
+          (click)="scrollToRestaurants()"
+        >
+          Order now
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+
+        <button
+          class="browse-restaurants-button"
+          type="button"
+          routerLink="/restaurants"
+        >
+          Browse Restaurants
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="promotion-image">
+      <img
+        src="https://res.cloudinary.com/gzafbake/image/upload/v1792305443/Indian_lunch_spread.png"
+        alt="A delicious spread of Indian food"
+      />
+    </div>
+
+    <div class="banner-pagination" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+  </section>
+
+  <!-- Food categories -->
+  <section class="categories-section">
+
+    <div class="section-heading category-heading">
+
+      <h2>What's on your mind?</h2>
+
+      <div class="carousel-controls" aria-hidden="true">
+        <button type="button" disabled>
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <button type="button">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="categories-list">
+
+      @for (category of foodCategories; track category.id) {
+        <app-food-categories
+          [imageUrl]="category.imageUrl"
+          [text]="category.text"
+        />
+      }
+
+    </div>
+
+  </section>
+
+  <!-- Popular restaurants -->
+  <section
+    class="restaurants-section"
+    #restaurantsSection
+  >
+
+    <div class="section-heading restaurants-heading">
+
+      <div>
+        <h2>Popular restaurants near you.</h2>
+        <p>Great food, just around the corner. Find your next favourite.</p>
+      </div>
+
+      <span class="restaurant-count">
+        {{ (restaurantCount$ | async) ?? 0 }} restaurants found
+      </span>
+
+    </div>
+
+    <!-- Restaurant search and filters -->
+    <app-restaurant-search-filter
+      [showSearch]="false"
+      [selectedCuisine]="selectedCuisine"
+      [selectedFilters]="selectedFilters"
+      [sortOption]="sortOption"
+      [cuisineOptions]="cuisineOptions"
+      (selectedCuisineChange)="updateCuisine($event)"
+      (selectedFiltersChange)="updateFilters($event)"
+      (sortOptionChange)="updateSort($event)"
+    />
+
+    <!-- Restaurant grid and empty state -->
+    @if (paginatedRestaurants$ | async; as restaurants) {
+
+      @if (restaurants.length > 0) {
+
+        <div class="restaurant-grid">
+
+          @for (restaurant of restaurants; track restaurant.id) {
+
+            <app-restaurant-card
+              [restaurant]="restaurant"
+              [routerLink]="['/restaurant', restaurant.id]"
+            />
+
+          }
+
+        </div>
+
+      } @else {
+
+        <div class="empty-state">
+
+          <mat-icon>search_off</mat-icon>
+
+          <h3>No restaurants found</h3>
+
+          <p>Try changing your search or filters.</p>
+
+          <button
+            type="button"
+            (click)="clearFilters()"
+          >
+            Clear filters
+          </button>
+
+        </div>
+
+      }
+
+    }
+
+    <!-- Restaurant pagination -->
+    <div class="pagination-section">
+
+      @if (filteredRestaurants$ | async; as restaurants) {
+
+        @if (totalPages$ | async; as totalPages) {
+
+          <p class="pagination-info">
+
+            Showing
+
+            <strong>
+              {{
+                restaurants.length === 0
+                  ? 0
+                  : (currentPage - 1) * pageSize + 1
+              }}–{{ Math.min(currentPage * pageSize, restaurants.length) }}
+            </strong>
+
+            of
+
+            <strong>{{ restaurants.length }}</strong>
+
+            restaurants
+
+          </p>
+
+          <nav
+            class="pagination"
+            aria-label="Restaurant pages"
+          >
+
+            <!-- Previous page -->
+            <button
+              type="button"
+              class="pagination-arrow"
+              [disabled]="currentPage === 1"
+              (click)="previousPage()"
+              aria-label="Previous page"
+            >
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+
+            <!-- Page numbers -->
+            @for (page of (pageNumbers$ | async) ?? []; track page) {
+
+              <button
+                type="button"
+                class="pagination-number"
+                [class.active]="currentPage === page"
+                [attr.aria-current]="currentPage === page ? 'page' : null"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </button>
+
+            }
+
+            <!-- Next page -->
+            <button
+              type="button"
+              class="pagination-arrow"
+              [disabled]="currentPage >= totalPages"
+              (click)="nextPage()"
+              aria-label="Next page"
+            >
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+
+          </nav>
+
+        }
+
+      }
+
+    </div>
+
+  </section>
+
+</main>

@@ -1,0 +1,143 @@
+
+:host {
+  display: block;
+}
+
+.restaurant-filters {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 220px 220px;
+  gap: 12px;
+  margin: 20px 0 16px;
+
+  .search-container,
+  .filter-dropdown {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+
+    mat-icon {
+      color: #888888;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .search-container {
+    input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #252525;
+      font-size: 13px;
+
+      &::placeholder {
+        color: #999999;
+      }
+    }
+
+    .clear-search {
+      display: flex;
+      align-items: center;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+  }
+
+  .filter-dropdown {
+    select {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #333333;
+      font-size: 13px;
+      cursor: pointer;
+    }
+  }
+}
+
+.filter-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+
+  .filter-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border: 1px solid #e5e5e5;
+    border-radius: 24px;
+    background: #ffffff;
+    color: #555555;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+
+    mat-icon {
+      width: 15px;
+      height: 15px;
+      font-size: 15px;
+    }
+
+    &:hover {
+      border-color: #f15a29;
+      color: #f15a29;
+    }
+
+    &.active {
+      border-color: #f15a29;
+      background: #fff1eb;
+      color: #f15a29;
+    }
+  }
+
+  .clear-filters {
+    border: none;
+    background: transparent;
+    color: #f15a29;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 1024px) {
+  .restaurant-filters {
+    grid-template-columns: minmax(0, 1fr) 180px;
+
+    .sort-dropdown {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .restaurant-filters {
+    grid-template-columns: 1fr;
+
+    .sort-dropdown {
+      grid-column: auto;
+    }
+  }
+
+  .filter-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 8px;
+
+    .filter-chip {
+      flex-shrink: 0;
+    }
+  }
+}

@@ -1,0 +1,76 @@
+<header class="header-section">
+
+  <!-- Brand logo -->
+  <a class="header-logo-section" routerLink="/dashboard" aria-label="MyFood home">
+    <img src="https://res.cloudinary.com/gzafbake/image/upload/v1791100808/Brand_emblem.png" class="website-logo"
+      alt="" />
+    <span class="website-name">MyFood</span>
+  </a>
+
+  @if (!minimal) {
+
+  <!-- Delivery location -->
+  <div class="header-location-section">
+    <mat-icon class="location-icon">location_on</mat-icon>
+
+    <div class="location-details">
+      <span class="location-label">DELIVER TO</span>
+      <span class="location-address">Indiranagar, Bengaluru</span>
+    </div>
+
+    <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
+  </div>
+
+  <!-- Search -->
+  <form class="header-search-bar-section" role="search">
+    <mat-icon class="search-icon">search</mat-icon>
+
+    <input type="search" class="search-input" placeholder="Search for dishes, restaurants & more"
+      aria-label="Search dishes and restaurants" [ngModel]="searchState.searchQuery()"
+      (ngModelChange)="onSearchChange($event)" name="restaurantSearch" />
+
+    <span class="search-shortcut" aria-hidden="true">⌘ K</span>
+  </form>
+
+  <!-- Main navigation -->
+  <nav class="header-profile-section" aria-label="Main navigation">
+
+    <a class="header-nav-item" routerLink="/offers">
+      <mat-icon>local_offer</mat-icon>
+      <span>Offers</span>
+    </a>
+
+    <a class="header-nav-item" routerLink="/help">
+      <mat-icon>help_outline</mat-icon>
+      <span>Help</span>
+    </a>
+
+    <a class="header-nav-item" routerLink="/profile">
+      <mat-icon>account_circle</mat-icon>
+      <span>Profile</span>
+    </a>
+
+    <a class="header-cart" routerLink="/cart" aria-label="Shopping cart">
+      <mat-icon>shopping_bag</mat-icon>
+      <span class="cart-count">2</span>
+    </a>
+
+  </nav>
+
+  } @else {
+
+  <!-- Minimal checkout navigation -->
+  <nav class="checkout-header-actions" aria-label="Checkout navigation">
+
+    @if (minimalActionLabel) {
+    <a [routerLink]="minimalActionRoute" class="checkout-back-link">
+      <mat-icon>arrow_back</mat-icon>
+      <span>{{ minimalActionLabel }}</span>
+    </a>
+    }
+
+  </nav>
+
+  }
+
+</header>
