@@ -1,0 +1,35 @@
+    .category-card {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+        text-align: center;
+
+        img {
+            width: clamp(60px, 8.5vw, 90px);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        h3 {
+            margin: 0;
+            font-size: 10px;
+            font-weight: 600;
+        }
+    }
+
+    @media (max-width:600px) {
+        .category-card {
+            scroll-snap-align: start;
+
+            img {
+                width: 62px;
+            }
+
+            h3 {
+                font-size: 9px;
+            }
+        }
+    }

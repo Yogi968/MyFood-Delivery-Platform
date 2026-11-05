@@ -1,5 +1,7 @@
+
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import {
@@ -14,21 +16,31 @@ import {
   selectCartTotalItems,
   selectCartTotalAmount,
 } from '../../store/selectors/cart.selectors';
-import { RouterLink } from '@angular/router';
+
+import {
+  selectSelectedRestaurant,
+} from '../../store/selectors/restaurant.selectors';
 
 @Component({
   selector: 'app-cart',
-  imports: [AsyncPipe,RouterLink],
+  imports: [AsyncPipe, RouterLink],
   templateUrl: './cart.html',
   styleUrl: './cart.scss',
 })
 export class Cart {
-
   private readonly store = inject(Store);
 
-  cartItems$ = this.store.select(selectCartItems);
-  totalItems$ = this.store.select(selectCartTotalItems);
-  totalAmount$ = this.store.select(selectCartTotalAmount);
+  /** Observable containing the current cart items. */
+  readonly cartItems$ = this.store.select(selectCartItems);
+
+  /** Observable containing the total quantity of cart items. */
+  readonly totalItems$ = this.store.select(selectCartTotalItems);
+
+  /** Observable containing the cart subtotal. */
+  readonly totalAmount$ = this.store.select(selectCartTotalAmount);
+
+  /** Observable containing the currently selected restaurant. */
+  readonly restaurant$ = this.store.select(selectSelectedRestaurant);
 
   /**
    * Increases the quantity of a cart item.
@@ -36,9 +48,7 @@ export class Cart {
    * @param menuItemId ID of the menu item
    */
   increaseQuantity(menuItemId: number): void {
-    this.store.dispatch(
-      increaseQuantity({ menuItemId })
-    );
+    this.store.dispatch(increaseQuantity({ menuItemId }));
   }
 
   /**
@@ -47,9 +57,7 @@ export class Cart {
    * @param menuItemId ID of the menu item
    */
   decreaseQuantity(menuItemId: number): void {
-    this.store.dispatch(
-      decreaseQuantity({ menuItemId })
-    );
+    this.store.dispatch(decreaseQuantity({ menuItemId }));
   }
 
   /**
@@ -58,9 +66,7 @@ export class Cart {
    * @param menuItemId ID of the menu item
    */
   removeItem(menuItemId: number): void {
-    this.store.dispatch(
-      removeFromCart({ menuItemId })
-    );
+    this.store.dispatch(removeFromCart({ menuItemId }));
   }
 
   /**

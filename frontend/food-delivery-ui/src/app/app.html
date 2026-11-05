@@ -1,1 +1,30 @@
-<router-outlet></router-outlet>
+
+@if (showMainLayout()) {
+  @if (showFullHeader()) {
+    <app-header />
+  } @else if (isRestaurantDetailsPage()) {
+    <app-header [minimal]="true" />
+  } @else if (showCheckoutHeader()) {
+    <app-header
+      [minimal]="true"
+      [minimalActionLabel]="checkoutActionLabel()"
+      [minimalActionRoute]="checkoutActionRoute()"
+    />
+  }
+}
+
+<main
+  class="app-content"
+  [class.has-cart-footer]="showCartFooter() && cartTotalItems() > 0"
+   [class.cart-page-content]="isCartDetailsPage()"
+>
+  <router-outlet />
+</main>
+
+@if (showMainLayout()) {
+  @if (showCartFooter() && cartTotalItems() > 0 && !isCartDetailsPage()) {
+    <app-cart-summary-bar />
+  } @else if (!isRestaurantDetailsPage()) {
+    <app-footer />
+  }
+}

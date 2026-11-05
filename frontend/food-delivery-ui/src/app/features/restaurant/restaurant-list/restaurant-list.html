@@ -1,37 +1,98 @@
-<h1>Restaurants</h1>
+<main class="restaurant-list-page">
 
-@if (loading$ | async) {
-  <p>Loading restaurants...</p>
-}
+  <!-- Reusable search and filter component -->
+  <app-restaurant-search-filter [searchQuery]="searchState.searchQuery()" [selectedCuisine]="selectedCuisine()"
+    [selectedFilters]="selectedFilters()" [sortOption]="sortOption()" [cuisineOptions]="cuisineOptions"
+    (searchQueryChange)="updateSearch($event)" (selectedCuisineChange)="selectedCuisine.set($event)"
+    (selectedFiltersChange)="selectedFilters.set($event)" (sortOptionChange)="sortOption.set($event)" />
 
-@if (error$ | async; as error) {
-  <p>{{ error }}</p>
-}
-
-@if (restaurants$ | async; as restaurants) {
-
-  @if (restaurants.length === 0 && !(loading$ | async)) {
-    <p>No restaurants available.</p>
-  }
-
-  @for (restaurant of restaurants; track restaurant.id) {
-    <div class="restaurant-card">
-
-      <h2>{{ restaurant.name }}</h2>
-
-      <p>{{ restaurant.description }}</p>
-
-      <p>{{ restaurant.address }}</p>
-
+  <!-- Restaurant listing heading -->
+  <header class="restaurant-list-header">
+    <div class="header-content">
+      <h1>Restaurants near you</h1>
       <p>
-        Status:
-        {{ restaurant.isActive ? 'Active' : 'Inactive' }}
+        Your neighbourhood favourites and new discoveries,
+        delivered to your door.
       </p>
-
-      <a [routerLink]="['/restaurants', restaurant.id]">
-        View Details
-      </a>
-
     </div>
+
+    <div class="delivery-info">
+      <mat-icon>directions_bike</mat-icon>
+      <span>Fresh food. Fast delivery.</span>
+    </div>
+  </header>
+
+  <!-- Loading state -->
+  @if (loading$ | async) {
+  <p class="loading-message">Loading restaurants...</p>
   }
-}
+
+  <!-- Error state -->
+  @if (error$ | async; as error) {
+  <div class="error-state">
+    <mat-icon>cloud_off</mat-icon>
+    <h2>We couldn't load the restaurants</h2>
+    <p>{{ error }}</p>
+  </div>
+  }
+
+  <!-- Restaurant listing -->
+  @if (restaurants$ | async; as restaurants) {
+
+  @if (!(loading$ | async) && !(error$ | async)) {
+
+  @if (restaurants.length === 0) {
+
+  <!-- No restaurants available -->
+  <div class="empty-state">
+    <mat-icon>restaurant</mat-icon>
+    <h2>No restaurants available</h2>
+    <p>Please check back later for delicious options.</p>
+  </div>
+
+  } @else {
+
+  <!-- Restaurant count -->
+  <div class="restaurant-list-meta">
+    <h2>Restaurants delivering to you</h2>
+    <span>
+      {{ filteredRestaurants().length }} restaurants found
+    </span>
+  </div>
+
+  <!-- Filtered restaurant results -->
+  @if (filteredRestaurants().length > 0) {
+
+  <section class="restaurant-grid">
+
+    @for (
+    restaurant of filteredRestaurants();
+    track restaurant.id
+    ) {
+    <app-restaurant-card [restaurant]="restaurant" [routerLink]="['/restaurant', restaurant.id]" />
+    }
+
+  </section>
+
+  } @else {
+
+  <!-- No matching results -->
+  <div class="empty-state">
+    <mat-icon>search_off</mat-icon>
+    <h2>No matching restaurants</h2>
+    <p>Try changing your search or filters.</p>
+
+    <button type="button" class="reset-button" (click)="clearFilters()">
+      Clear filters
+    </button>
+  </div>
+
+  }
+
+  }
+
+  }
+
+  }
+
+</main>

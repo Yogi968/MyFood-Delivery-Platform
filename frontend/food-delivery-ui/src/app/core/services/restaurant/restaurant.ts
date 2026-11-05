@@ -1,10 +1,16 @@
+
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { delay, Observable, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { DisplayRestaurants, Restaurant, RestaurantRequest, RestaurantUpdateRequest } from '../../../models/restaurant.models';
+import {
+  DisplayRestaurants,
+  Restaurant,
+  RestaurantRequest,
+  RestaurantUpdateRequest
+} from '../../../models/restaurant.models';
+
 import { BaseApiService } from '../http/base-apiservice';
-import { mockRestaurantsData } from '../../../mock/restaurants.mock';
 
 @Injectable({
   providedIn: 'root'
@@ -16,35 +22,27 @@ export class RestaurantService {
   private readonly apiUrl =
     'http://localhost:8080/api/restaurants';
 
-  // getRestaurants(): Observable<Restaurant[]> {
-  //   return this.baseApi.get<Restaurant[]>(
-  //     this.apiUrl
-  //   );
-  // }
+  /**
+   * Retrieves all active restaurants from the backend.
+   */
   getRestaurants(): Observable<DisplayRestaurants[]> {
-  return of(mockRestaurantsData).pipe(delay(500));
-}
-
-  // getRestaurantById(id: number): Observable<Restaurant> {
-  //   return this.baseApi.get<Restaurant>(
-  //     `${this.apiUrl}/${id}`
-  //   );
-  // }
-
-  getRestaurantById(id: number): Observable<Restaurant> {
-    const restaurant = mockRestaurantsData.find(
-      (item) => item.id === id
+    return this.baseApi.get<DisplayRestaurants[]>(
+      this.apiUrl
     );
-
-    if (!restaurant) {
-      return throwError(
-        () => new Error(`Restaurant with ID ${id} not found`)
-      );
-    }
-
-    return of(restaurant as unknown as Restaurant).pipe(delay(500));
   }
 
+  /**
+   * Retrieves a restaurant by its unique ID.
+   */
+  getRestaurantById(id: number): Observable<Restaurant> {
+    return this.baseApi.get<Restaurant>(
+      `${this.apiUrl}/${id}`
+    );
+  }
+
+  /**
+   * Creates a new restaurant.
+   */
   createRestaurant(
     request: RestaurantRequest
   ): Observable<Restaurant> {
@@ -54,6 +52,9 @@ export class RestaurantService {
     );
   }
 
+  /**
+   * Updates an existing restaurant.
+   */
   updateRestaurant(
     id: number,
     request: RestaurantUpdateRequest
@@ -64,8 +65,11 @@ export class RestaurantService {
     );
   }
 
-  deleteRestaurant(id: number): Observable<void> {
-    return this.baseApi.delete<void>(
+  /**
+   * Deactivates a restaurant.
+   */
+  deleteRestaurant(id: number): Observable<Restaurant> {
+    return this.baseApi.delete<Restaurant>(
       `${this.apiUrl}/${id}`
     );
   }

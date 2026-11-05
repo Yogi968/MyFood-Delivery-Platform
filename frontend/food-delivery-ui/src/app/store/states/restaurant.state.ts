@@ -1,7 +1,7 @@
-import { Restaurant } from '../../models/restaurant.models';
+import { DisplayRestaurants, Restaurant } from '../../models/restaurant.models';
 
 export interface RestaurantState {
-  restaurants: Restaurant[];
+  restaurants: DisplayRestaurants[];
   selectedRestaurant: Restaurant | null;
   loading: boolean;
   error: string | null;

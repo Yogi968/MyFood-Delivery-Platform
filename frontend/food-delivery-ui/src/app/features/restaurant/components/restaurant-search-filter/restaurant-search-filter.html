@@ -1,0 +1,92 @@
+
+<section class="restaurant-filters">
+
+  <!-- Restaurant search -->
+  @if (showSearch) {
+  <div class="search-container">
+    <mat-icon>search</mat-icon>
+
+    <input
+      type="text"
+      placeholder="Search restaurants or cuisines..."
+      [ngModel]="searchQuery"
+      (ngModelChange)="updateSearch($event)"
+    />
+
+    @if (searchQuery) {
+      <button
+        type="button"
+        class="clear-search"
+        aria-label="Clear search"
+        (click)="updateSearch('')"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </div>
+
+  <!-- Cuisine selection -->
+  <div class="filter-dropdown">
+    <mat-icon>restaurant</mat-icon>
+
+    <select
+      [ngModel]="selectedCuisine"
+      (ngModelChange)="selectedCuisineChange.emit($event)"
+    >
+      @for (cuisine of cuisineOptions; track cuisine) {
+        <option [value]="cuisine">
+          {{ cuisine === 'All' ? 'All Cuisines' : cuisine }}
+        </option>
+      }
+    </select>
+  </div>
+  }
+
+  <!-- Sorting -->
+  <div class="filter-dropdown sort-dropdown">
+    <mat-icon>sort</mat-icon>
+
+    <select
+      [ngModel]="sortOption"
+      (ngModelChange)="sortOptionChange.emit($event)"
+    >
+      <option value="recommended">Recommended</option>
+      <option value="rating">Highest Rated</option>
+      <option value="delivery">Fastest Delivery</option>
+      <option value="price-low">Price: Low to High</option>
+      <option value="price-high">Price: High to Low</option>
+    </select>
+  </div>
+
+</section>
+
+<!-- Filter chips -->
+<section class="filter-chips">
+
+  @for (filter of filters; track filter) {
+    <button
+      type="button"
+      class="filter-chip"
+      [class.active]="selectedFilters.includes(filter)"
+      [attr.aria-pressed]="selectedFilters.includes(filter)"
+      (click)="toggleFilter(filter)"
+    >
+      @if (selectedFilters.includes(filter)) {
+        <mat-icon>check</mat-icon>
+      }
+
+      {{ filter }}
+    </button>
+  }
+
+  @if (hasActiveFilters) {
+    <button
+      type="button"
+      class="clear-filters"
+      (click)="clearFilters()"
+    >
+      Clear all
+    </button>
+  }
+
+</section>

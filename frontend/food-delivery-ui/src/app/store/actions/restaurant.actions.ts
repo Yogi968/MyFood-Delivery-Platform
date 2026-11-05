@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Restaurant } from '../../models/restaurant.models';
+import { DisplayRestaurants, Restaurant } from '../../models/restaurant.models';
 import { RESTAURANT_ACTION_TYPES } from '../constants/restaurant-actions.constants';
 
 export const loadRestaurants = createAction(
@@ -8,7 +8,7 @@ export const loadRestaurants = createAction(
 
 export const loadRestaurantsSuccess = createAction(
   RESTAURANT_ACTION_TYPES.LOAD_RESTAURANTS_SUCCESS,
-  props<{ restaurants: Restaurant[] }>()
+  props<{ restaurants: DisplayRestaurants[] }>()
 );
 
 export const loadRestaurantsFailure = createAction(

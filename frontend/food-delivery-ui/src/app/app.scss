@@ -1,0 +1,61 @@
+
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+// Keep header and footer outside the scrolling area.
+app-header,
+app-footer {
+  display: block;
+  flex: 0 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  background: #ffffff;
+}
+
+app-footer {
+  border-top: 1px solid #eeeeee;
+}
+
+// Main application scrolling container.
+.app-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  // Allow natural mouse-wheel and touchpad scrolling.
+  overscroll-behavior-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  // Ensure the container can receive scroll input.
+  touch-action: pan-y;
+
+  // Space for the fixed floating cart summary.
+  &.has-cart-footer {
+    padding-bottom: 170px;
+  }
+
+  // Cart page uses its own page-level scrolling.
+  &.cart-page-content {
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-content {
+    &.has-cart-footer {
+      padding-bottom: 190px;
+    }
+  }
+}

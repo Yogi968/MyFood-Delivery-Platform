@@ -1,0 +1,115 @@
+
+@let cartItems = cartItems$ | async;
+@let totalItems = totalItems$ | async;
+@let totalAmount = totalAmount$ | async;
+
+@if (cartItems && cartItems.length > 0 && (totalAmount ?? 0) > 0) {
+
+  <section class="cart-summary-footer" [class.expanded]="isExpanded()">
+
+    <!-- Expandable food item preview -->
+    @if (isExpanded()) {
+      <div class="cart-items-section">
+
+        <div class="cart-items-heading">
+          <h3>Your cart</h3>
+          <span>{{ cartItems.length }} different items</span>
+        </div>
+
+        <div class="cart-items-list">
+
+          @for (item of cartItems; track item.menuItem.id) {
+
+            <article class="cart-item">
+
+              @if (item.menuItem.imageUrl) {
+                <img
+                  class="cart-item-image"
+                  [src]="item.menuItem.imageUrl"
+                  [alt]="item.menuItem.name"
+                />
+              } @else {
+                <div class="cart-item-image image-placeholder">
+                  🍽️
+                </div>
+              }
+
+              <div class="cart-item-details">
+                <h4>{{ item.menuItem.name }}</h4>
+
+                <p>
+                  {{ item.menuItem.price | currency:'INR':'symbol':'1.0-0' }}
+                  × {{ item.quantity }}
+                </p>
+              </div>
+
+              <span class="cart-item-subtotal">
+                {{
+                  item.menuItem.price * item.quantity
+                    | currency:'INR':'symbol':'1.0-0'
+                }}
+              </span>
+
+            </article>
+
+          }
+
+        </div>
+      </div>
+    }
+
+    <!-- Cart summary footer actions -->
+    <div class="cart-summary-section">
+
+      <div class="cart-summary-information">
+
+        <div class="cart-summary-total">
+          <span class="cart-total-items">
+            {{ totalItems ?? 0 }}
+            {{ totalItems === 1 ? 'item' : 'items' }} added
+          </span>
+
+          <span class="cart-total-amount">
+            {{ totalAmount | currency:'INR':'symbol':'1.0-0' }}
+          </span>
+        </div>
+
+        <button
+          type="button"
+          class="cart-toggle-button"
+          (click)="toggleCartDetails()"
+          [attr.aria-expanded]="isExpanded()"
+          [attr.aria-label]="isExpanded() ? 'Collapse cart details' : 'Expand cart details'"
+        >
+          <span class="toggle-arrow">
+            {{ isExpanded() ? '⌄' : '⌃' }}
+          </span>
+        </button>
+
+      </div>
+
+      <div class="cart-summary-actions">
+
+        <button
+          type="button"
+          class="view-cart-button"
+          (click)="toggleCartDetails()"
+        >
+          {{ isExpanded() ? 'Hide details' : 'View cart' }}
+        </button>
+
+        <a
+          routerLink="/cart"
+          class="proceed-cart-button"
+        >
+          Proceed to Cart
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+}
