@@ -11,6 +11,7 @@ import {
 } from '../../../models/restaurant.models';
 
 import { BaseApiService } from '../http/base-apiservice';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,7 @@ export class RestaurantService {
 
   private readonly baseApi = inject(BaseApiService);
 
-  private readonly apiUrl =
-    'http://localhost:8080/api/restaurants';
+  private readonly apiUrl = `${environment.apiUrl}/api/restaurants`;
 
   /**
    * Retrieves all active restaurants from the backend.

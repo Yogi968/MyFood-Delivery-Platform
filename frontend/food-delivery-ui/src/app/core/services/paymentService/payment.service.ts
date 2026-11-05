@@ -2,14 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';;
 import { BaseApiService } from '../http/base-apiservice';
 import {PaymentRequest, PaymentInitiationResponse } from '../../../models/payment.models';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PaymentService {
   private readonly baseApiService = inject(BaseApiService);
-  private readonly apiUrl =
-    'http://localhost:8080/api';
+  private readonly apiUrl =`${environment.apiUrl}/api`;
   /**
    * Initiates an online payment for the specified order.
    *

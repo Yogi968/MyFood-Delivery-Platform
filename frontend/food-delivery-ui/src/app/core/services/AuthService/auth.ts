@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { TokenStorage } from '../TokenStorageService/token-storage';
 import { createAccountRequest, createAccountResponse, LoginRequest, LoginResponse } from '../../../models/auth.models';
 import { BaseApiService } from '../http/base-apiservice';
+import { environment } from '../../../../environments/environment';
 
 
 @Injectable({
@@ -11,7 +12,7 @@ import { BaseApiService } from '../http/base-apiservice';
 })
 export class Auth {
   private readonly baseApiService = inject(BaseApiService);
-  private readonly apiUrl = 'http://localhost:8080';
+  private readonly apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorage) { }
 
