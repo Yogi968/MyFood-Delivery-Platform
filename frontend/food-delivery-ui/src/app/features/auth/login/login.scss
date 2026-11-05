@@ -203,6 +203,12 @@
     color: #77736D;
   }
 
+  .createaccount-subtext.auth-loading{
+     pointer-events: none;
+     cursor:not-allowed;
+     opacity:0.5;
+  }
+
   .createaccount-subtext {
     font-size: 14px;
     font-family: Arial, Helvetica, sans-serif;

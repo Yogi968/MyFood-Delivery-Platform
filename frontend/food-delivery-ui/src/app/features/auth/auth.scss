@@ -67,15 +67,20 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 40px 50px 70px;
+    padding: 40px 50px 30px;
     box-sizing: border-box;
     min-height: 0;
     position: relative;
+
+    // Allow the authentication content to scroll independently.
+    overflow-y: auto;
+    overflow-x: hidden;
 
     .authentication-section-titles {
       display: flex;
       flex-direction: column;
       margin-bottom: 20px;
+      flex-shrink: 0;
 
       .authentication-section-heading {
         font-family: Arial, Helvetica, sans-serif;
@@ -96,20 +101,22 @@
 
     .auth-tab-group {
       width: 100%;
+      flex-shrink: 0;
     }
 
     .auth-tab-content {
       padding-top: 24px;
     }
 
+    // Legal links remain after the form content.
     .legal-links {
-      position: absolute;
-      bottom: 20px;
-      left: 0;
-      right: 0;
+      position: static;
       display: flex;
       justify-content: center;
       gap: 45px;
+      margin-top: 24px;
+      padding-bottom: 10px;
+      flex-shrink: 0;
 
       a {
         font-family: Arial, Helvetica, sans-serif;
@@ -121,7 +128,52 @@
   }
 }
 
-/* Mobile layout */
+/* ======================================================
+   Tablet View
+====================================================== */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .login-page {
+    .login-page-hero-image-secton {
+      width: 45%;
+
+      .hero-content {
+        padding: 18px;
+
+        .hero-content-heading-section {
+          .website-logo {
+            width: 34px;
+            height: 34px;
+          }
+
+          .website-name {
+            font-size: 32px;
+          }
+        }
+
+        .hero-content-section {
+          font-size: 48px;
+        }
+      }
+    }
+
+    .login-page-authentication-section {
+      width: 55%;
+      padding: 35px 35px 25px;
+
+      .authentication-section-titles {
+        .authentication-section-heading {
+          font-size: 34px;
+        }
+      }
+    }
+  }
+}
+
+/* ======================================================
+   Mobile Layout
+====================================================== */
+
 @media (max-width: 768px) {
   .login-page {
     flex-direction: column;
@@ -135,6 +187,7 @@
       width: 100%;
       height: 202px;
       min-height: 202px;
+      flex-shrink: 0;
 
       .hero-content {
         padding: 25px;
@@ -169,14 +222,17 @@
 
     .login-page-authentication-section {
       width: 100%;
-      flex: 1;
+      flex: 1 0 auto;
       min-height: 0;
       height: auto;
-      padding: 30px 25px 40px;
+      padding: 30px 25px 30px;
       justify-content: flex-start;
 
+      // On mobile, use natural page scrolling.
+      overflow: visible;
+
       .authentication-section-titles {
-        margin-bottom: 30px;
+        margin-bottom: 25px;
 
         .authentication-section-heading {
           font-size: 24px;
@@ -191,9 +247,18 @@
         }
       }
 
+      .auth-tab-group {
+        width: 100%;
+      }
+
+      .auth-tab-content {
+        padding-top: 20px;
+      }
+
       .legal-links {
         position: static;
         margin-top: 25px;
+        padding-bottom: 10px;
         gap: 25px;
 
         a {
@@ -203,6 +268,10 @@
     }
   }
 }
+
+/* ======================================================
+   Small Mobile Screens
+====================================================== */
 
 @media (max-width: 380px) {
   .login-page {
@@ -220,10 +289,10 @@
     }
 
     .login-page-authentication-section {
-      padding: 25px 20px 35px;
+      padding: 25px 20px 30px;
 
       .authentication-section-titles {
-        margin-bottom: 25px;
+        margin-bottom: 22px;
       }
 
       .legal-links {
