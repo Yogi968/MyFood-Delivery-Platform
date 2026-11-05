@@ -1,0 +1,241 @@
+
+@let cartItems = cartItems$ | async;
+
+<main class="restaurant-page">
+
+  <!-- Restaurant loading and error states -->
+  @if (loading$ | async) {
+    <p class="loading-message">Loading restaurant...</p>
+  }
+
+  @if (error$ | async; as error) {
+    <p class="error-message">{{ error }}</p>
+  }
+
+  <!-- Selected restaurant information -->
+  @if (restaurant$ | async; as restaurant) {
+    <section class="restaurant-banner">
+
+      @if (restaurant.imageUrl) {
+        <img
+          class="restaurant-image"
+          [src]="restaurant.imageUrl"
+          [alt]="restaurant.name"
+        />
+      } @else {
+        <div class="restaurant-image image-placeholder">
+          🍽️
+        </div>
+      }
+
+      <div class="restaurant-information">
+        <h1>{{ restaurant.name }}</h1>
+
+        @if (restaurant.description) {
+          <p class="restaurant-description">
+            {{ restaurant.description }}
+          </p>
+        }
+
+        <p class="restaurant-address">
+          <span aria-hidden="true">📍</span>
+          {{ restaurant.address }}
+        </p>
+
+        <span
+          class="restaurant-status"
+          [class.inactive]="!restaurant.isActive"
+        >
+          {{ restaurant.isActive ? 'Active' : 'Currently unavailable' }}
+        </span>
+      </div>
+
+    </section>
+  }
+
+  <!-- Restaurant menu -->
+  <section class="menu-section">
+
+    <div class="menu-heading">
+      <h2>Explore Menu</h2>
+      <p>Discover delicious dishes from this restaurant</p>
+    </div>
+
+    <!-- Dish search -->
+    <div class="dish-search">
+      <span aria-hidden="true">🔍</span>
+
+      <input
+        type="text"
+        placeholder="Search for dishes"
+        aria-label="Search for dishes"
+        (input)="updateSearchQuery($any($event.target).value)"
+      />
+    </div>
+
+    <!-- Menu filters -->
+    <div class="menu-filters">
+
+      <button
+        type="button"
+        class="filter-button"
+        [class.active]="selectedMenuFilter === 'all'"
+        (click)="updateMenuFilter('all')"
+      >
+        All
+      </button>
+
+      <button
+        type="button"
+        class="filter-button"
+        [class.active]="selectedMenuFilter === 'veg'"
+        (click)="updateMenuFilter('veg')"
+      >
+        Veg
+      </button>
+
+      <button
+        type="button"
+        class="filter-button"
+        [class.active]="selectedMenuFilter === 'non-veg'"
+        (click)="updateMenuFilter('non-veg')"
+      >
+        Non-veg
+      </button>
+
+    </div>
+
+    <!-- Menu loading and error states -->
+    @if (menuItemsLoading$ | async) {
+      <p class="loading-message">Loading menu...</p>
+    }
+
+    @if (menuItemsError$ | async; as error) {
+      <p class="error-message">{{ error }}</p>
+    }
+
+    <!-- Menu item cards -->
+    @if (filteredMenuItems$ | async; as menuItems) {
+
+      @if (menuItems.length === 0) {
+        <p class="empty-message">
+          No menu items available.
+        </p>
+      } @else {
+
+        <div class="menu-grid">
+
+          @for (menuItem of menuItems; track menuItem.id) {
+
+            <article class="menu-item-card">
+
+              <!-- Menu item image -->
+              <div class="menu-item-image-wrapper">
+
+                @if (menuItem.imageUrl) {
+                  <img
+                    [src]="menuItem.imageUrl"
+                    [alt]="menuItem.name"
+                    class="menu-item-image"
+                  />
+                } @else {
+                  <div class="menu-item-image image-placeholder">
+                    🍽️
+                  </div>
+                }
+
+              </div>
+
+              <!-- Menu item information -->
+              <div class="menu-item-content">
+
+                <span
+                  class="dish-type"
+                  [class.veg]="menuItem.vegetarian"
+                  [class.non-veg]="!menuItem.vegetarian"
+                >
+                  {{ menuItem.vegetarian ? 'Veg' : 'Non-veg' }}
+                </span>
+
+                <h3>{{ menuItem.name }}</h3>
+
+                @if (menuItem.description) {
+                  <p class="dish-description">
+                    {{ menuItem.description }}
+                  </p>
+                }
+
+                <!-- Price and cart quantity controls -->
+                <div class="menu-item-bottom">
+
+                  <strong class="menu-item-price">
+                    ₹{{ menuItem.price }}
+                  </strong>
+
+                  <div class="menu-item-actions">
+
+                    @if (getCartItemQuantity(cartItems, menuItem.id) > 0) {
+
+                      <!-- Quantity control for items already in cart -->
+                      <div
+                        class="quantity-control"
+                        [attr.aria-label]="'Quantity: ' + getCartItemQuantity(cartItems, menuItem.id)"
+                      >
+
+                        <button
+                          type="button"
+                          class="quantity-button"
+                          aria-label="Decrease quantity"
+                          (click)="decreaseMenuItemQuantity(menuItem.id)"
+                        >
+                          −
+                        </button>
+
+                        <span class="quantity-value">
+                          {{ getCartItemQuantity(cartItems, menuItem.id) }}
+                        </span>
+
+                        <button
+                          type="button"
+                          class="quantity-button"
+                          aria-label="Increase quantity"
+                          (click)="increaseMenuItemQuantity(menuItem.id)"
+                        >
+                          +
+                        </button>
+
+                      </div>
+
+                    } @else {
+
+                      <!-- Add button for items not in cart -->
+                      <button
+                        type="button"
+                        class="add-button"
+                        [disabled]="!menuItem.available"
+                        (click)="addMenuItemToCart(menuItem, menuItem.restaurantId)"
+                      >
+                        {{ menuItem.available ? 'ADD +' : 'Unavailable' }}
+                      </button>
+
+                    }
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          }
+
+        </div>
+
+      }
+
+    }
+
+  </section>
+
+</main>

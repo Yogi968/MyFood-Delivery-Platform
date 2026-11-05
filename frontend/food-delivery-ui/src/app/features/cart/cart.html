@@ -1,0 +1,289 @@
+
+<div class="cart-page">
+
+  @let restaurant = restaurant$ | async;
+  @let cartItems = cartItems$ | async;
+  @let totalItems = totalItems$ | async;
+  @let totalAmount = totalAmount$ | async;
+
+  <!-- Breadcrumb navigation -->
+  <nav class="cart-breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/dashboard">Home</a>
+    <span>›</span>
+    <a routerLink="/restaurants">Restaurants</a>
+    <span>›</span>
+    <span class="current-page">Your cart</span>
+  </nav>
+
+  <!-- Cart heading -->
+  <header class="cart-page-header">
+    <div>
+      <h1>Your cart</h1>
+      <p>A few favourites, one delicious order. Review your meal below.</p>
+    </div>
+
+    <span class="cart-header-note">
+      <span aria-hidden="true">♧</span>
+      Fresh food. Fast delivery.
+    </span>
+  </header>
+
+  @if (cartItems; as items) {
+
+    @if (items.length === 0) {
+
+      <!-- Empty cart state -->
+      <section class="empty-cart">
+
+        <div class="empty-cart-icon">
+          🛒
+        </div>
+
+        <h2>Your cart is empty</h2>
+
+        <p>
+          Looks like you haven't added anything to your cart yet.
+          Explore restaurants and discover your next favourite meal.
+        </p>
+
+        <a routerLink="/restaurants" class="continue-shopping-button">
+          Explore Restaurants
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </section>
+
+    } @else {
+
+      <!-- Main cart layout -->
+      <div class="cart-layout">
+
+        <!-- Left column -->
+        <div class="cart-main-content">
+
+          <!-- Cart items card -->
+          <section class="cart-items-section">
+
+            <div class="cart-section-header">
+
+              <div class="cart-restaurant-icon" aria-hidden="true">
+                🍴
+              </div>
+
+              <div class="cart-section-information">
+
+                <h2>
+                  {{ restaurant?.name ?? 'Your selected restaurant' }}
+                </h2>
+
+                <p>
+                  {{ restaurant?.address ?? 'Your selected dishes' }}
+                  · {{ items.length }} different dishes
+                </p>
+
+              </div>
+
+              <span class="cart-item-count">
+                {{ totalItems }} items
+              </span>
+
+            </div>
+
+            <!-- Individual cart items -->
+            <div class="cart-items-list">
+
+              @for (cartItem of items; track cartItem.menuItem.id) {
+
+                <article class="cart-item">
+
+                  <!-- Food image -->
+                  @if (cartItem.menuItem.imageUrl) {
+                    <img
+                      class="cart-item-image"
+                      [src]="cartItem.menuItem.imageUrl"
+                      [alt]="cartItem.menuItem.name"
+                    />
+                  } @else {
+                    <div class="cart-item-image image-placeholder">
+                      🍽️
+                    </div>
+                  }
+
+                  <!-- Food details -->
+                  <div class="cart-item-details">
+
+                    <div class="cart-item-name">
+
+                      <span
+                        class="dish-type-indicator"
+                        [class.veg]="cartItem.menuItem.vegetarian"
+                        [class.non-veg]="!cartItem.menuItem.vegetarian"
+                        [attr.aria-label]="cartItem.menuItem.vegetarian ? 'Vegetarian' : 'Non-vegetarian'"
+                      ></span>
+
+                      <h3>{{ cartItem.menuItem.name }}</h3>
+
+                    </div>
+
+                    @if (cartItem.menuItem.description) {
+                      <p class="cart-item-description">
+                        {{ cartItem.menuItem.description }}
+                      </p>
+                    }
+
+                    <p class="cart-item-unit-price">
+                      ₹{{ cartItem.menuItem.price }} each
+                    </p>
+
+                  </div>
+
+                  <!-- Quantity controls -->
+                  <div class="cart-item-quantity-section">
+
+                    <div class="quantity-controls">
+
+                      <button
+                        type="button"
+                        aria-label="Decrease quantity"
+                        (click)="decreaseQuantity(cartItem.menuItem.id)"
+                      >
+                        −
+                      </button>
+
+                      <span>{{ cartItem.quantity }}</span>
+
+                      <button
+                        type="button"
+                        aria-label="Increase quantity"
+                        (click)="increaseQuantity(cartItem.menuItem.id)"
+                      >
+                        +
+                      </button>
+
+                    </div>
+
+                    <button
+                      type="button"
+                      class="remove-item-button"
+                      (click)="removeItem(cartItem.menuItem.id)"
+                    >
+                      <span aria-hidden="true">♲</span>
+                      Remove
+                    </button>
+
+                  </div>
+
+                  <!-- Item subtotal -->
+                  <div class="cart-item-subtotal">
+                    ₹{{ cartItem.menuItem.price * cartItem.quantity }}
+                  </div>
+
+                </article>
+
+              }
+
+            </div>
+
+            <!-- Add more dishes -->
+            <div class="add-more-dishes">
+
+              <a routerLink="/restaurants">
+                <span aria-hidden="true">+</span>
+                Add more dishes
+              </a>
+
+              <button
+                type="button"
+                class="clear-cart-button"
+                (click)="clearCart()"
+              >
+                Clear cart
+              </button>
+
+            </div>
+
+          </section>
+
+          <!-- Delivery information -->
+          <section class="delivery-information-card">
+
+            <div class="delivery-icon" aria-hidden="true">
+              📍
+            </div>
+
+            <div>
+              <h3>Delivering from {{ restaurant?.name ?? 'your restaurant' }}</h3>
+              <p>
+                {{ restaurant?.address ?? 'Your delivery address can be confirmed at checkout.' }}
+              </p>
+            </div>
+
+          </section>
+
+        </div>
+
+        <!-- Right column: Bill summary -->
+        <aside class="cart-summary-section">
+
+          <h2>Bill summary</h2>
+
+          <div class="bill-summary-details">
+
+            <div class="bill-summary-row">
+              <span>Item subtotal ({{ totalItems }} items)</span>
+              <strong>₹{{ totalAmount ?? 0 }}</strong>
+            </div>
+
+            <div class="bill-summary-row">
+              <span>Delivery fee</span>
+              <span class="bill-calculation-note">At checkout</span>
+            </div>
+
+            <div class="bill-summary-row">
+              <span>Taxes</span>
+              <span class="bill-calculation-note">At checkout</span>
+            </div>
+
+          </div>
+
+          <!-- Grand total -->
+          <div class="bill-grand-total">
+
+            <div>
+              <h3>Grand total</h3>
+              <p>Item subtotal before additional charges</p>
+            </div>
+
+            <strong>₹{{ totalAmount ?? 0 }}</strong>
+
+          </div>
+
+          <!-- Order message -->
+          <div class="cart-savings-message">
+            <span aria-hidden="true">✓</span>
+            Your delicious meal is almost ready!
+          </div>
+
+          <!-- Checkout -->
+          <a
+            routerLink="/checkout"
+            class="checkout-button"
+          >
+            Proceed to Checkout
+            <span aria-hidden="true">→</span>
+          </a>
+
+          <p class="secure-checkout-note">
+            <span aria-hidden="true">♧</span>
+            Safe & secure checkout
+          </p>
+
+        </aside>
+
+      </div>
+
+    }
+
+  }
+
+</div>

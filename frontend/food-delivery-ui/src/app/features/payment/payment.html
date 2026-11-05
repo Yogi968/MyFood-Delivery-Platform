@@ -1,0 +1,47 @@
+<h1>Payment</h1>
+
+<section>
+  <h2>Order Summary</h2>
+
+  <p>
+    Payment Method: Online Payment
+  </p>
+
+  <p>
+    Amount to Pay:
+    ₹{{ totalAmount$ | async }}
+  </p>
+</section>
+
+<hr>
+
+<section>
+  <h2>Complete Payment</h2>
+
+  <p>
+    You are about to make an online payment for your order.
+  </p>
+
+  <button type="button" (click)="pay()">
+    Pay ₹{{ totalAmount$ | async }}
+  </button>
+</section>
+@if (paymentFailed) {
+   <div class="payment-failure">
+
+  <h2>Payment Failed</h2>
+
+  <p>
+    Your payment could not be processed.
+  </p>
+
+  <p>
+    Your order has been cancelled.
+  </p>
+
+  <button type="button" (click)="retryPayment()">
+    Retry Payment
+  </button>
+
+</div>
+}
