@@ -38,6 +38,12 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/restaurants",
+                                "/api/restaurants/*",
+                                "/api/restaurants/*/menu-items"
+                        ).permitAll()
+                        .requestMatchers(
                                 "/login",
                                 "/register",
                                 "/api/health",
@@ -50,7 +56,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/restaurants").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/restaurants/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/restaurants/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/restaurants/*/menu-items").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/menu-items/*").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/restaurants/*/menu-items").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/restaurants/*/menu-items/*").hasRole("ADMIN")

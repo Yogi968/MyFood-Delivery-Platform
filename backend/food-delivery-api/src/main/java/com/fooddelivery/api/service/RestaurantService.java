@@ -1,12 +1,14 @@
+
 package com.fooddelivery.api.service;
 
 import com.fooddelivery.api.dto.RestaurantResponse;
 import com.fooddelivery.api.dto.RestaurantUpdateRequest;
+import com.fooddelivery.api.dto.RestaurantRequest;
 import com.fooddelivery.api.entity.Restaurant;
 import com.fooddelivery.api.exception.ResourceNotFoundException;
 import com.fooddelivery.api.repository.RestaurantRepository;
 import org.springframework.stereotype.Service;
-import com.fooddelivery.api.dto.RestaurantRequest;
+
 import java.util.List;
 
 @Service
@@ -18,21 +20,19 @@ public class RestaurantService {
         this.restaurantRepository = restaurantRepository;
     }
 
+    /**
+     * Retrieves all active restaurants with their complete details.
+     */
     public List<RestaurantResponse> getAllRestaurants() {
-
         return restaurantRepository.findByIsActiveTrue()
                 .stream()
-                .map(restaurant -> new RestaurantResponse(
-                        restaurant.getId(),
-                        restaurant.getName(),
-                        restaurant.getDescription(),
-                        restaurant.getAddress(),
-                        restaurant.getImageUrl(),
-                        restaurant.getIsActive()
-                ))
+                .map(this::toResponse)
                 .toList();
     }
 
+    /**
+     * Creates a new restaurant using the supplied request details.
+     */
     public RestaurantResponse createRestaurant(RestaurantRequest request) {
 
         Restaurant restaurant = new Restaurant();
@@ -44,33 +44,27 @@ public class RestaurantService {
 
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
-        return new RestaurantResponse(
-                savedRestaurant.getId(),
-                savedRestaurant.getName(),
-                savedRestaurant.getDescription(),
-                savedRestaurant.getAddress(),
-                savedRestaurant.getImageUrl(),
-                savedRestaurant.getIsActive()
-        );
+        return toResponse(savedRestaurant);
     }
 
+    /**
+     * Retrieves a restaurant by its unique ID.
+     */
     public RestaurantResponse getRestaurantById(Long id) {
 
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Restaurant not found with id: " + id)
+                        new ResourceNotFoundException(
+                                "Restaurant not found with id: " + id
+                        )
                 );
 
-        return new RestaurantResponse(
-                restaurant.getId(),
-                restaurant.getName(),
-                restaurant.getDescription(),
-                restaurant.getAddress(),
-                restaurant.getImageUrl(),
-                restaurant.getIsActive()
-        );
+        return toResponse(restaurant);
     }
 
+    /**
+     * Updates the basic details of an existing restaurant.
+     */
     public RestaurantResponse updateRestaurant(
             Long id,
             RestaurantUpdateRequest request) {
@@ -90,16 +84,12 @@ public class RestaurantService {
         Restaurant updatedRestaurant =
                 restaurantRepository.save(restaurant);
 
-        return new RestaurantResponse(
-                updatedRestaurant.getId(),
-                updatedRestaurant.getName(),
-                updatedRestaurant.getDescription(),
-                updatedRestaurant.getAddress(),
-                updatedRestaurant.getImageUrl(),
-                updatedRestaurant.getIsActive()
-        );
+        return toResponse(updatedRestaurant);
     }
 
+    /**
+     * Marks a restaurant as inactive without deleting its database record.
+     */
     public RestaurantResponse deactivateRestaurant(Long id) {
 
         Restaurant restaurant = restaurantRepository.findById(id)
@@ -114,13 +104,29 @@ public class RestaurantService {
         Restaurant updatedRestaurant =
                 restaurantRepository.save(restaurant);
 
+        return toResponse(updatedRestaurant);
+    }
+
+    /**
+     * Converts a Restaurant entity into a complete RestaurantResponse DTO.
+     */
+    private RestaurantResponse toResponse(Restaurant restaurant) {
+
         return new RestaurantResponse(
-                updatedRestaurant.getId(),
-                updatedRestaurant.getName(),
-                updatedRestaurant.getDescription(),
-                updatedRestaurant.getAddress(),
-                updatedRestaurant.getImageUrl(),
-                updatedRestaurant.getIsActive()
+                restaurant.getId(),
+                restaurant.getName(),
+                restaurant.getDescription(),
+                restaurant.getAddress(),
+                restaurant.getImageUrl(),
+                restaurant.getImageAlt(),
+                restaurant.getCuisine(),
+                restaurant.getRating(),
+                restaurant.getDeliveryTime(),
+                restaurant.getDistance(),
+                restaurant.getPriceForOne(),
+                restaurant.getBadge(),
+                restaurant.getDiscount(),
+                restaurant.getIsActive()
         );
     }
 }
