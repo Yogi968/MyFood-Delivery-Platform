@@ -1,0 +1,177 @@
+
+<div class="confirmation-page">
+
+  <nav class="confirmation-breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/dashboard">Home</a>
+    <span aria-hidden="true">›</span>
+    <a routerLink="/cart">Cart</a>
+    <span aria-hidden="true">›</span>
+    <span class="current-page">Order Confirmation</span>
+  </nav>
+
+  @if (order$ | async; as order) {
+
+    <section
+      class="confirmation-hero"
+      [class.success-state]="paymentResult === 'success'"
+      [class.cod-state]="paymentResult === 'cod'"
+      [class.failed-state]="paymentResult === 'failed'"
+      [class.cancelled-state]="paymentResult === 'cancelled'"
+      [class.pending-state]="
+        paymentResult !== 'success' &&
+        paymentResult !== 'cod' &&
+        paymentResult !== 'failed' &&
+        paymentResult !== 'cancelled'
+      "
+    >
+
+      @if (paymentResult === 'success') {
+        <div class="confirmation-icon">✓</div>
+        <span class="confirmation-label">Payment successful</span>
+        <h1>Order Confirmed!</h1>
+        <p>
+          Your payment was successful and your order has been placed.
+          Thank you for choosing MyFood!
+        </p>
+      } @else if (paymentResult === 'cod') {
+        <div class="confirmation-icon">✓</div>
+        <span class="confirmation-label">Order successfully placed</span>
+        <h1>Thank You for Your Order!</h1>
+        <p>
+          Your order has been placed successfully.
+          Please keep the payment ready when your order arrives.
+        </p>
+      } @else if (paymentResult === 'failed') {
+        <div class="confirmation-icon">!</div>
+        <span class="confirmation-label">Payment unsuccessful</span>
+        <h1>Payment Failed</h1>
+        <p>
+          We couldn't process your payment.
+          Please try again to complete your order.
+        </p>
+      } @else if (paymentResult === 'cancelled') {
+        <div class="confirmation-icon">×</div>
+        <span class="confirmation-label">Payment cancelled</span>
+        <h1>Payment Was Cancelled</h1>
+        <p>
+          You cancelled the payment process.
+          You can return to your cart and try again.
+        </p>
+      } @else {
+        <div class="confirmation-icon">i</div>
+        <span class="confirmation-label">Order information</span>
+        <h1>Order Details</h1>
+        <p>Here are the details of your order.</p>
+      }
+
+    </section>
+
+    <!-- Order information -->
+    <div class="confirmation-content">
+
+      <section class="confirmation-card order-details-card">
+
+        <div class="card-heading">
+          <div>
+            <h2>Order Details</h2>
+            <p>Your order information</p>
+          </div>
+
+          <span class="order-id">#{{ order.id }}</span>
+        </div>
+
+        <div class="order-information-grid">
+
+          <div class="information-item">
+            <span class="information-label">Order ID</span>
+            <strong>#{{ order.id }}</strong>
+          </div>
+
+          <div class="information-item">
+            <span class="information-label">Order Amount</span>
+            <strong>
+              {{ order.totalAmount | currency:'INR':'symbol':'1.0-2' }}
+            </strong>
+          </div>
+
+          <div class="information-item">
+            <span class="information-label">Order Status</span>
+            <strong class="status-value">{{ order.status }}</strong>
+          </div>
+
+          <div class="information-item">
+            <span class="information-label">Payment Method</span>
+            <strong>
+              {{ order.paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online Payment' }}
+            </strong>
+          </div>
+
+          <div class="information-item">
+            <span class="information-label">Payment Status</span>
+            <strong class="status-value">{{ order.paymentStatus }}</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Delivery information -->
+      <section class="confirmation-card delivery-details-card">
+
+        <div class="card-heading">
+          <div>
+            <h2>Delivery Details</h2>
+            <p>Your order will be delivered to</p>
+          </div>
+
+          <span class="delivery-icon" aria-hidden="true">📍</span>
+        </div>
+
+        <div class="delivery-person">
+          <h3>{{ order.fullName }}</h3>
+
+          <p>
+            {{ order.address }},
+            {{ order.city }} -
+            {{ order.pincode }}
+          </p>
+        </div>
+
+      </section>
+
+      @if (paymentResult === 'success' || paymentResult === 'cod') {
+        <div class="confirmation-thank-you">
+          <span aria-hidden="true">♥</span>
+          Thank you for ordering with MyFood!
+        </div>
+      }
+
+      <!-- Actions -->
+      <div class="confirmation-actions">
+
+        @if (paymentResult === 'failed' || paymentResult === 'cancelled') {
+          <a routerLink="/cart" class="secondary-action-button">
+            Back to Cart
+          </a>
+        }
+
+        <a routerLink="/restaurants" class="primary-action-button">
+          Continue Shopping
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </div>
+
+    </div>
+
+  } @else {
+
+    <section class="confirmation-loading">
+      <div class="loading-spinner"></div>
+      <h2>Loading your order...</h2>
+      <p>Please wait while we retrieve your order details.</p>
+    </section>
+
+  }
+
+</div>

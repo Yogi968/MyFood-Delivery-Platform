@@ -1,0 +1,70 @@
+
+
+<footer class="app-footer">
+
+  <div class="footer-container">
+
+    <!-- Top footer section -->
+    <div class="footer-top">
+
+      <!-- Brand section -->
+      <div class="footer-brand">
+
+        <div class="brand-logo">
+          <span class="brand-icon">
+            <mat-icon>restaurant</mat-icon>
+          </span>
+
+          <span class="brand-name">MyFood</span>
+        </div>
+
+        <p class="brand-tagline">
+          Good food. Great days.
+        </p>
+
+      </div>
+
+      <!-- Service features -->
+      <div class="footer-features">
+
+        @for (feature of footerFeatures; track feature.id) {
+          <div class="feature-item">
+
+            <mat-icon class="feature-icon">
+              {{ feature.icon }}
+            </mat-icon>
+
+            <div class="feature-content">
+              <h4>{{ feature.title }}</h4>
+              <p>{{ feature.description }}</p>
+            </div>
+
+          </div>
+        }
+
+      </div>
+
+    </div>
+
+    <!-- Bottom footer section -->
+    <div class="footer-bottom">
+
+      <p class="copyright">
+        © {{ currentYear }} MyFood. Made for your cravings.
+      </p>
+
+      <nav class="footer-navigation" aria-label="Footer navigation">
+
+        @for (link of footerLinks; track link.id) {
+          <a [routerLink]="link.route">
+            {{ link.label }}
+          </a>
+        }
+
+      </nav>
+
+    </div>
+
+  </div>
+
+</footer>

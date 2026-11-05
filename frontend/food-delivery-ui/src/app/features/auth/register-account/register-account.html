@@ -1,0 +1,136 @@
+<div class="register-form-content" [class.loading]="isLoading">
+    @if(!success){
+    <div class="registration-error" [class.display-message]="displayMessage" aria-live="polite">
+        @if(error){
+        <mat-icon class="registration-error-icon">
+            error_outline
+        </mat-icon>
+        <div class="registration-error-content">
+            <p>{{message}}</p>
+        </div>
+        }
+    </div>
+
+    <form [formGroup]="registerationForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="firstName">First Name*</label>
+            <input id="firstName" type="text" placeholder="Enter your first name" formControlName="firstName" />
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input id="lastName" type="text" placeholder="Enter your Last name" formControlName="lastName" />
+        </div>
+        <div class="form-group">
+            <label for="email">Email*</label>
+            <input id="email" type="email" placeholder="you@gmail.com" formControlName="email" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password*</label>
+            <div class="password-input-wrapper">
+                <input id="password" [type]="showPassword ? 'text' : 'password'" placeholder="Enter your password"
+                    formControlName="password" />
+                <button type="button" class="password-visibility-button" (click)="togglePasswordVisibility()"
+                    [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                    <svg class="password-eye-icon" [attr.viewBox]="showPassword
+                                    ? icons.EYE_OFF.viewBox
+                                    : icons.EYE.viewBox" fill="none" stroke="#77736D" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    
+                        @if (!showPassword) {
+                        <path [attr.d]="icons.EYE.path"></path>
+    
+                        <circle [attr.cx]="icons.EYE.circle.cx" [attr.cy]="icons.EYE.circle.cy"
+                            [attr.r]="icons.EYE.circle.r">
+                        </circle>
+                        }
+    
+                        @else {
+    
+                        @for (path of icons.EYE_OFF.paths; track path) {
+                        <path [attr.d]="path"></path>
+                        }
+    
+                        <line [attr.x1]="icons.EYE_OFF.line.x1" [attr.y1]="icons.EYE_OFF.line.y1"
+                            [attr.x2]="icons.EYE_OFF.line.x2" [attr.y2]="icons.EYE_OFF.line.y2">
+                        </line>
+    
+                        }
+    
+                    </svg>
+                </button>
+                <!-- </button> -->
+            </div>
+            <p class="field-requirement">Use at least 6 characters, with an appropriate password policy.</p>
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password*</label>
+            <div class="password-input-wrapper">
+                <input id="confirmPassword" [type]="showPassword ? 'text' : 'password'" placeholder="Re-enter your password"
+                    formControlName="confirmPassword" />
+                <button type="button" class="password-visibility-button" (click)="togglePasswordVisibility()"
+                    [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                    <svg class="password-eye-icon" [attr.viewBox]="showPassword
+                                    ? icons.EYE_OFF.viewBox
+                                    : icons.EYE.viewBox" fill="none" stroke="#77736D" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    
+                        @if (!showPassword) {
+                        <path [attr.d]="icons.EYE.path"></path>
+    
+                        <circle [attr.cx]="icons.EYE.circle.cx" [attr.cy]="icons.EYE.circle.cy"
+                            [attr.r]="icons.EYE.circle.r">
+                        </circle>
+                        }
+    
+                        @else {
+    
+                        @for (path of icons.EYE_OFF.paths; track path) {
+                        <path [attr.d]="path"></path>
+                        }
+    
+                        <line [attr.x1]="icons.EYE_OFF.line.x1" [attr.y1]="icons.EYE_OFF.line.y1"
+                            [attr.x2]="icons.EYE_OFF.line.x2" [attr.y2]="icons.EYE_OFF.line.y2">
+                        </line>
+                        }
+                    </svg>
+                </button>
+                <!-- </button> -->
+            </div>
+            @if (registerationForm.hasError('passwordMismatch') && registerationForm.get('confirmPassword')?.value) {
+            <small class="field-requirement">
+                Password and confirm password must match.
+            </small>
+            }
+        </div>
+    
+        <button class="authentication-button-section" type="submit" [disabled]="isButtonDisabled()">
+            @if (isLoading) {
+            <span class="login-spinner" aria-hidden="true"></span>
+            <span>processing...</span>
+            } @else {
+            <span>Create Account</span>
+            }
+        </button>
+    </form>
+    <div>
+        <p class="createaccount-text">
+            Already have an account?
+            <span><a href="#" class="createaccount-subtext" (click)="$event.preventDefault(); logInButtonClicked()">Log In</a></span>
+        </p>
+    </div>
+    }
+    @else{
+        <div class="registration-success-content" [class.display-message]="displayMessage" aria-live="polite">
+            <h1>{{message}}</h1>
+            <p>Your Registration is Complete. You can now log in.</p>
+            <button class="authentication-button-section" type="submit" (click)="logInButtonClicked()">
+                @if (isLoading) {
+                <span class="login-spinner" aria-hidden="true"></span>
+                <span>processing...</span>
+                } @else {
+                <span>Log In</span>
+                }
+            </button>
+        </div>
+    }
+</div>

@@ -1,0 +1,356 @@
+
+<div class="checkout-page">
+
+  <!-- Breadcrumb navigation -->
+  <nav class="checkout-breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/dashboard">Home</a>
+    <span aria-hidden="true">›</span>
+    <a routerLink="/cart">Your cart</a>
+    <span aria-hidden="true">›</span>
+    <span class="current-page">Checkout</span>
+  </nav>
+
+  <!-- Checkout heading -->
+  <header class="checkout-page-header">
+    <div>
+      <h1>Checkout</h1>
+      <p>Choose a delivery address and payment method to place your order.</p>
+    </div>
+
+    <div class="checkout-header-note">
+      <span aria-hidden="true">♧</span>
+      Fresh food. Fast delivery.
+    </div>
+  </header>
+
+  @if (cartItems$ | async; as cartItems) {
+
+    @if (cartItems.length === 0) {
+
+      <!-- Empty cart state -->
+      <section class="empty-checkout">
+        <div class="empty-checkout-icon">🛒</div>
+        <h2>Your cart is empty</h2>
+        <p>Add some delicious dishes before proceeding to checkout.</p>
+
+        <a routerLink="/restaurants" class="continue-shopping-button">
+          Explore Restaurants
+        </a>
+      </section>
+
+    } @else {
+
+      <!-- Checkout content -->
+      <form
+        class="checkout-layout"
+        [formGroup]="addressForm"
+        (ngSubmit)="proceedToPayment()"
+      >
+
+        <!-- Left column -->
+        <div class="checkout-main-content">
+
+          <!-- Delivery address section -->
+          <section class="checkout-card address-section">
+
+            <div class="checkout-section-heading">
+              <span class="section-icon" aria-hidden="true">📍</span>
+              <h2>Delivery Address</h2>
+            </div>
+
+            <div class="address-form-fields">
+
+              <!-- Full name -->
+              <div class="form-field">
+                <label for="fullName">Full name</label>
+                <input
+                  id="fullName"
+                  type="text"
+                  formControlName="fullName"
+                  placeholder="Enter your full name"
+                  autocomplete="name"
+                />
+
+                @if (
+                  addressForm.controls.fullName.touched &&
+                  addressForm.controls.fullName.invalid
+                ) {
+                  <small class="field-error">Full name is required.</small>
+                }
+              </div>
+
+              <!-- Phone number -->
+              <div class="form-field">
+                <label for="phoneNumber">Phone number</label>
+                <input
+                  id="phoneNumber"
+                  type="tel"
+                  formControlName="phoneNumber"
+                  placeholder="Enter 10-digit mobile number"
+                  maxlength="10"
+                  autocomplete="tel"
+                />
+
+                @if (
+                  addressForm.controls.phoneNumber.touched &&
+                  addressForm.controls.phoneNumber.invalid
+                ) {
+                  <small class="field-error">
+                    Enter a valid 10-digit phone number.
+                  </small>
+                }
+              </div>
+
+              <!-- Address -->
+              <div class="form-field full-width">
+                <label for="address">Delivery address</label>
+                <textarea
+                  id="address"
+                  formControlName="address"
+                  placeholder="House number, street, area and landmark"
+                  rows="3"
+                  autocomplete="street-address"
+                ></textarea>
+
+                @if (
+                  addressForm.controls.address.touched &&
+                  addressForm.controls.address.invalid
+                ) {
+                  <small class="field-error">Delivery address is required.</small>
+                }
+              </div>
+
+              <!-- City and pincode -->
+              <div class="form-field">
+                <label for="city">City</label>
+                <input
+                  id="city"
+                  type="text"
+                  formControlName="city"
+                  placeholder="Enter city"
+                  autocomplete="address-level2"
+                />
+
+                @if (
+                  addressForm.controls.city.touched &&
+                  addressForm.controls.city.invalid
+                ) {
+                  <small class="field-error">City is required.</small>
+                }
+              </div>
+
+              <div class="form-field">
+                <label for="pincode">Pincode</label>
+                <input
+                  id="pincode"
+                  type="text"
+                  formControlName="pincode"
+                  placeholder="6-digit pincode"
+                  maxlength="6"
+                  inputmode="numeric"
+                  autocomplete="postal-code"
+                />
+
+                @if (
+                  addressForm.controls.pincode.touched &&
+                  addressForm.controls.pincode.invalid
+                ) {
+                  <small class="field-error">
+                    Enter a valid 6-digit pincode.
+                  </small>
+                }
+              </div>
+
+            </div>
+
+          </section>
+
+          <!-- Payment method section -->
+          <section class="checkout-card payment-method-section">
+
+            <div class="checkout-section-heading">
+              <span class="section-icon" aria-hidden="true">▤</span>
+              <h2>Payment Method</h2>
+            </div>
+
+            <div class="payment-options">
+
+              <!-- Cash on Delivery -->
+              <label
+                class="payment-option"
+                [class.selected]="addressForm.controls.paymentMethod.value === 'COD'"
+              >
+                <input
+                  type="radio"
+                  formControlName="paymentMethod"
+                  value="COD"
+                />
+
+                <span class="payment-radio-indicator"></span>
+
+                <span class="payment-option-icon" aria-hidden="true">💵</span>
+
+                <span class="payment-option-details">
+                  <strong>Cash on Delivery</strong>
+                  <small>Pay in cash when your order is delivered.</small>
+                </span>
+              </label>
+
+              <!-- Online Payment -->
+              <label
+                class="payment-option"
+                [class.selected]="addressForm.controls.paymentMethod.value === 'ONLINE'"
+              >
+                <input
+                  type="radio"
+                  formControlName="paymentMethod"
+                  value="ONLINE"
+                />
+
+                <span class="payment-radio-indicator"></span>
+
+                <span class="payment-option-icon" aria-hidden="true">💳</span>
+
+                <span class="payment-option-details">
+                  <strong>Online Payment</strong>
+                  <small>Pay securely via PayU (Cards, UPI, Net Banking, Wallets).</small>
+                </span>
+
+                <span class="payu-brand">PayU</span>
+              </label>
+
+            </div>
+
+          </section>
+
+        </div>
+
+        <!-- Right column: Order summary -->
+        <aside class="checkout-summary">
+
+          <div class="checkout-summary-heading">
+            <h2>Order Summary</h2>
+            <span>
+              {{ cartItems.length }} items
+              ·
+              {{ totalItems$ | async }} quantities
+            </span>
+          </div>
+
+          <!-- Order items -->
+          <div class="checkout-order-items">
+
+            @for (cartItem of cartItems; track cartItem.menuItem.id) {
+
+              <article class="checkout-order-item">
+
+                @if (cartItem.menuItem.imageUrl) {
+                  <img
+                    class="checkout-item-image"
+                    [src]="cartItem.menuItem.imageUrl"
+                    [alt]="cartItem.menuItem.name"
+                  />
+                } @else {
+                  <div class="checkout-item-image image-placeholder">
+                    🍽️
+                  </div>
+                }
+
+                <div class="checkout-item-details">
+
+                  <div class="checkout-item-name">
+                    <span
+                      class="dish-type-indicator"
+                      [class.veg]="cartItem.menuItem.vegetarian"
+                      aria-label="Food type"
+                    ></span>
+
+                    <h3>{{ cartItem.menuItem.name }}</h3>
+                  </div>
+
+                  <p>Qty: {{ cartItem.quantity }}</p>
+
+                </div>
+
+                <strong class="checkout-item-total">
+                  ₹{{ cartItem.menuItem.price * cartItem.quantity }}
+                </strong>
+
+              </article>
+
+            }
+
+          </div>
+
+          <!-- Price breakdown -->
+          <div class="checkout-price-breakdown">
+
+            <div class="summary-row">
+              <span>Item subtotal ({{ cartItems.length }} items)</span>
+              <strong>₹{{ totalAmount$ | async }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>Delivery fee</span>
+              <span class="calculation-note">At checkout</span>
+            </div>
+
+            <div class="summary-row">
+              <span>Taxes</span>
+              <span class="calculation-note">At checkout</span>
+            </div>
+
+          </div>
+
+          <!-- Grand total -->
+          <div class="checkout-grand-total">
+            <div>
+              <h3>Grand total</h3>
+              <p>Item subtotal before additional charges</p>
+            </div>
+
+            <strong>
+              ₹{{ totalAmount$ | async }}
+            </strong>
+          </div>
+
+          <!-- Submission error -->
+          @if (errorMessage) {
+            <p class="checkout-error-message" role="alert">
+              {{ errorMessage }}
+            </p>
+          }
+
+          <!-- Dynamic checkout button -->
+          <button
+            type="submit"
+            class="checkout-submit-button"
+            [disabled]="isSubmitting"
+          >
+
+            @if (isSubmitting) {
+              Processing your order...
+            } @else if (
+              addressForm.controls.paymentMethod.value === 'ONLINE'
+            ) {
+              Make Payment <span aria-hidden="true">→</span>
+            } @else {
+              Place Order <span aria-hidden="true">→</span>
+            }
+
+          </button>
+
+          <p class="secure-payment-note">
+            <span aria-hidden="true">🔒</span>
+            Safe and secure payment
+          </p>
+
+        </aside>
+
+      </form>
+
+    }
+
+  }
+
+</div>

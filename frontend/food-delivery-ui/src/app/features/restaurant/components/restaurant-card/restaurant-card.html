@@ -1,0 +1,47 @@
+<article class="restaurant-card">
+  <div class="restaurant-image">
+    <img
+      [src]="restaurant.imageUrl"
+      [alt]="restaurant.imageAlt"
+    />
+
+    @if (restaurant.badge) {
+      <span class="restaurant-badge">
+        {{ restaurant.badge }}
+      </span>
+    }
+
+    <button
+      class="favourite-button"
+      type="button"
+      [attr.aria-label]="'Add ' + restaurant.name + ' to favourites'"
+    >
+      <mat-icon>favorite_border</mat-icon>
+    </button>
+
+    <span class="discount-label">
+      <mat-icon>local_offer</mat-icon>
+      {{ restaurant.discount }}
+    </span>
+  </div>
+
+  <div class="restaurant-details">
+    <div class="restaurant-name-row">
+      <h3>{{ restaurant.name }}</h3>
+      <span class="rating">★ {{ restaurant.rating }}</span>
+    </div>
+
+    <p class="restaurant-cuisine">
+      {{ restaurant.cuisine }}
+    </p>
+
+    <div class="restaurant-meta">
+      <span>
+        <mat-icon>schedule</mat-icon>
+        {{ restaurant.deliveryTime }} · {{ restaurant.distance }}
+      </span>
+
+      <span>₹{{ restaurant.priceForOne }} for one</span>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,332 @@
+
+/* =========================================
+   MyFood responsive header
+========================================= */
+
+.header-section {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.5vw, 22px);
+  width: 100%;
+  min-height: 58px;
+  padding: 8px clamp(16px, 4.5vw, 64px);
+  box-sizing: border-box;
+  background-color: #fff;
+  border-bottom: 1px solid #f0efed;
+  font-family: Arial, Helvetica, sans-serif;
+
+  /* Brand logo */
+  .header-logo-section {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex: 0 0 auto;
+    padding-right: clamp(10px, 1.5vw, 20px);
+    border-right: 1px solid #eee;
+    text-decoration: none;
+
+    .website-logo {
+      display: block;
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .website-name {
+      margin: 0;
+      color: #282522;
+      font-size: 16px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+  }
+
+  /* Delivery location */
+  .header-location-section {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 0 1 auto;
+    min-width: 0;
+
+    .location-icon {
+      flex: 0 0 auto;
+      width: 18px;
+      height: 18px;
+      color: #f15a24;
+      font-size: 18px;
+    }
+
+    .location-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+
+      .location-label,
+      .location-address {
+        margin: 0;
+        white-space: nowrap;
+      }
+
+      .location-label {
+        color: #898580;
+        font-size: 7px;
+        letter-spacing: 0.3px;
+      }
+
+      .location-address {
+        overflow: hidden;
+        max-width: 180px;
+        color: #302d2a;
+        font-size: 9px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .dropdown-icon {
+      flex: 0 0 auto;
+      width: 15px;
+      height: 15px;
+      color: #f15a24;
+      font-size: 15px;
+    }
+  }
+
+  /* Search bar */
+  .header-search-bar-section {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 34px;
+    gap: 7px;
+    padding: 0 11px;
+    box-sizing: border-box;
+    border-radius: 9px;
+    background-color: #f7f6f4;
+
+    .search-icon {
+      flex: 0 0 auto;
+      width: 17px;
+      height: 17px;
+      color: #817e79;
+      font-size: 17px;
+    }
+
+    .search-input {
+      flex: 1 1 auto;
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: #302d2a;
+      font: inherit;
+      font-size: 10px;
+
+      &::placeholder {
+        color: #88847f;
+        opacity: 1;
+      }
+    }
+
+    .search-shortcut {
+      flex: 0 0 auto;
+      color: #898580;
+      font-size: 8px;
+      white-space: nowrap;
+    }
+  }
+
+  /* Offers, Help, Profile and Cart */
+  .header-profile-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: clamp(8px, 1.4vw, 18px);
+    flex: 0 0 auto;
+
+    .header-nav-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #302d2a;
+      font-size: 9px;
+      text-decoration: none;
+      white-space: nowrap;
+
+      mat-icon {
+        flex: 0 0 auto;
+        width: 14px;
+        height: 14px;
+        color: #393633;
+        font-size: 14px;
+      }
+
+      &:first-child mat-icon {
+        color: #f15a24;
+      }
+    }
+
+    /* Cart and notification badge */
+    .header-cart {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: 31px;
+      height: 31px;
+      border-radius: 9px;
+      background-color: #fff2eb;
+      color: #f15a24;
+      text-decoration: none;
+
+      mat-icon {
+        width: 17px;
+        height: 17px;
+        font-size: 17px;
+      }
+
+      .cart-count {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 13px;
+        height: 13px;
+        padding: 0 3px;
+        box-sizing: border-box;
+        border-radius: 50%;
+        background-color: #f15a24;
+        color: #fff;
+        font-size: 8px;
+        font-weight: 700;
+      }
+    }
+  }
+
+  /* Tablet and small desktop */
+  @media (max-width: 1024px) {
+    gap: 12px;
+    padding-right: 20px;
+    padding-left: 20px;
+
+    .header-logo-section {
+      padding-right: 10px;
+    }
+
+    .header-location-section {
+      max-width: 180px;
+    }
+
+    .header-search-bar-section {
+      .search-shortcut {
+        display: none;
+      }
+    }
+
+    .header-profile-section {
+      gap: 10px;
+    }
+  }
+
+  /* Tablet and large mobile */
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 10px 16px;
+
+    .header-logo-section {
+      order: 1;
+      padding-right: 0;
+      border-right: 0;
+    }
+
+    .header-location-section {
+      order: 2;
+      max-width: 55%;
+      margin-left: auto;
+    }
+
+    .header-profile-section {
+      order: 3;
+      margin-left: auto;
+
+      .header-nav-item {
+        span {
+          display: none;
+        }
+      }
+    }
+
+    .header-search-bar-section {
+      order: 4;
+      flex: 1 0 100%;
+      height: 38px;
+    }
+
+    .header-logo-section {
+      .website-logo {
+        width: 23px;
+        height: 23px;
+      }
+    }
+  }
+
+  /* Small mobile */
+  @media (max-width: 480px) {
+    gap: 10px;
+    padding: 10px 12px;
+
+    .header-logo-section {
+      .website-name {
+        font-size: 15px;
+      }
+    }
+
+    .header-location-section {
+      max-width: 52%;
+      gap: 3px;
+
+      .location-icon {
+        width: 16px;
+        height: 16px;
+        font-size: 16px;
+      }
+
+      .location-details {
+        .location-label {
+          font-size: 6px;
+        }
+
+        .location-address {
+          max-width: 145px;
+          font-size: 8px;
+        }
+      }
+    }
+
+    .header-profile-section {
+      gap: 10px;
+
+      .header-cart {
+        width: 29px;
+        height: 29px;
+      }
+    }
+
+    .header-search-bar-section {
+      height: 36px;
+
+      .search-input {
+        font-size: 11px;
+      }
+    }
+  }
+}
